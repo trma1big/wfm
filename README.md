@@ -8,8 +8,8 @@ no databases needed, all data are saved on json files in order to be portable wi
 
 
  # INSTALL
- + install node js 
- + clone the repo
+ + install node js ( https://nodejs.org/it/download/ )
+ + clone the repo 
  + _cd wfm_
  + _npm init_
  + rename all _db/.json.distribution_ to _db/.json_
