@@ -67,7 +67,7 @@ router.get('/tasks/:wsname/:taskname', function(req, res) {
 });
 
 router.post('/chg_task_status', function(req, res) { 
-  // CURL EXAMPLE x WINDOWS : curl  -X POST -H "Content-Type: application/json" -d "{\"wsname\": \"01-bpo-gg-generic\", \"taskname\": \"ARACCAMBI\", \"status\":0}" http://localhost:8383/api/v1/chg_task_status
+  // CURL EXAMPLE x WINDOWS : curl  -X POST -H "Content-Type: application/json" -d "{\"wsname\": \"NOME_WORKFLOW\", \"taskname\": \"NOME_TASK\", \"status\":0}" http://localhost/api/v1/chg_task_status
   if(typeof req.session.user === "undefined" ) {
     var decoded = jwt_decode(req.headers['x-access-token']);
     username = decoded.username;
