@@ -19,7 +19,15 @@ no databases needed, all data are saved on json files in order to be portable wi
 
 # WEB INTERFACE
 by default the web interface respond on port 80 so please go to http://localhost
-the default username is _admin_ with password _password_.
+the default username is _admin_ with password _password_ (changeIT as soon as possible).
+view workflow status.
+![image](https://user-images.githubusercontent.com/44255116/189321073-8f1eaa5f-2b19-46a7-ad50-ce13b352474a.png)
+
+edit net workflow from template.
+![image](https://user-images.githubusercontent.com/44255116/189326578-fd479602-0694-4dd3-a44d-9b842d8dd19a.png)
+
+
+
 
 
 # API
