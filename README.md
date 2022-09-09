@@ -15,6 +15,7 @@ no databases needed, all data are saved on json files in order to be portable wi
  + rename all _db/.json.distribution_ to _db/.json_
  + rename ._env.distribution_ to _.env_
  + update _.env_ data in order to customize your installation
+ + execute _node app.js_
 
 # WEB INTERFACE
 by default the web interface respond on port 80 so please go to http://localhost
