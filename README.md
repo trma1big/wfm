@@ -6,4 +6,12 @@ the status of each fases can be changed using the API or manually using the web 
 
 no databases needed.
 
+ # INSTALL
  
+ clone the repo
+ cd fwm
+ npm init
+ rename all db/.json.distribution to db/.json
+ rename .env.distribution to .env
+ 
+ update .env data in order to customize your installation
