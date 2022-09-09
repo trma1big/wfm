@@ -18,8 +18,8 @@
                       <th scope="col">name</th>
                       <th scope="col">file</th>
                       <th scope="col">status</th>
-                      <th scope="col">last start</th>
-                      <th scope="col">last end</th>
+                      <!-- <th scope="col">last start</th>
+                      <th scope="col">last end</th> -->
                       <th>Actions</th>
                       <!-- <th></th> -->
                     </tr>
@@ -92,8 +92,8 @@
                 { "data": "name" },
                 { "data": "file" },                             
                 { "data": "status" },       
-                { "data": "last_start" },  
-                { "data": "last_end" },  
+                // { "data": "last_start" },  
+                // { "data": "last_end" },  
                 { "render": function(data, type, row) {                
                     if (disabled_editing !== 1) {
                         return '<span class="badge bg-danger"><a id="deleterow'+ row.name +'" class="delete" style="color: white;" role="button" ' + disabled_editing + '><i class="bi bi-trash3 text-light" title="Delete"></i></a></span>' +
@@ -107,7 +107,7 @@
             ],
                 responsive: true,
                 "columnDefs": [
-                     { className: "dt-right", "targets": [6] }
+                     { className: "dt-right", "targets": [4] }
                 ]
             });
         
