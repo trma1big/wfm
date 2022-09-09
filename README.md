@@ -56,6 +56,10 @@ possible status value are:
 - 1 - running ( when the activity in workflow start)
 - 2 - Error ( when the activity in workflow end with Errors)
 
+you will find a python utility ( _start_all_task.py_ ) under utility folder that permit to change the status of all workflow with a new status or change a specific status of a task in a workflow.
+start the utility in order to have a context help with parameter.
+
+
 
 
 
