@@ -31,7 +31,7 @@ edit net workflow from template.
 
 
 # API
-The application expose _APIs_ /api/v1/ in order to: 
+The application expose _APIs_ /api/v1/.. in order to: 
 
 + _login_ in order to obtain a session token
 + _list_ task in workflow with status
