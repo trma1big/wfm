@@ -168,12 +168,15 @@ router.get('/list/:type', function(req, res) {
         oldname= "DEFAULT";
         overallstatus=0;
         todelete = [];
-        rawdata.conf.tasks.task.forEach(function(item, index, object) {
-          
+        rawdata.conf.tasks.task.forEach(function(item, index, object) {          
           if (oldname === item.name) {
-
             todelete.push(index);
-          } else {            
+          } else {
+            delete item.jobs_id
+            delete item.jobs
+            delete item. jobs_description            
+            delete item.last_start
+            delete item.last_end
             oldname = item.name;
             rawdata.conf.tasks.task[index].status = get_task_status(rawdata, item.name, username);
           }          
