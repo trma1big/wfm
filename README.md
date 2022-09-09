@@ -52,9 +52,9 @@ The application expose _APIs_ in order to:
 
 
 possible status value are:
-0 - Not running ( when the activity in workflow end)
-1 - running ( when the activity in workflow start)
-2 - Error ( when the activity in workflow end with Errors)
+- 0 - Not running ( when the activity in workflow end)
+- 1 - running ( when the activity in workflow start)
+- 2 - Error ( when the activity in workflow end with Errors)
 
 
 
