@@ -1,0 +1,175 @@
+<%- include('partials/header') %>    
+
+ <!-- <a class="btn btn-lg btn-lg" href="<%= url %>" role="button">Back &raquo;</a>       -->
+
+                    
+
+<script src="/bpmn-js/dist/bpmn-navigated-viewer.development.js"></script>
+<link rel="stylesheet" href="/bpmn-js/dist/assets/diagram-js.css" />
+<link rel="stylesheet" href="/bpmn-js/dist/assets/bpmn-js.css" />
+<link rel="stylesheet" href="/bpmn-js/dist/assets/bpmn-font/css/bpmn.css" />
+<link href="/public/bpmn_graph.css" rel="stylesheet" >
+
+<div class="bg-light border rounded-3 p-3" >
+<div class="row">
+  <div class="col-10">
+    <div class="table-responsive-sm">
+      <!-- <table id="dtworkflows" class="table compact table-hover table-sm table-bordered w-auto" >   -->
+        <table id="dtworkflows" class="table table-striped table-bordered" style="width:100%">
+        <thead class="table-dark">
+          <tr><th scope="col">Jobs</th><th scope="col">Description</th><th scope="col">last start</th><th scope="col">last end</th><th scope="col">Status</th><th scope="col">Comment</th><th></th></tr>
+        </thead>   
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-2">
+    <div class="table-responsive-sm">
+      <!-- <table id="legend" class="table compact table-hover table-sm table-bordered w-auto" >   -->
+        <table id="legend" class="table table-striped table-bordered" style="width:100%">
+        <thead class="table-dark">    
+          <tr><th scope="col"></th><th scope="col">Description</th></tr> 
+        </thead>
+        <tbody>   
+          <tr><td style="background-color:#f3e6a2"><i class="bi bi-stack-overflow text-light" title="Status"></i></td><td><strong style="font-size:10px;">Not running</strong></td></tr>
+          <tr><td style="background-color:#91d9bf"><i class="bi bi-stack-overflow text-light" title="Status"></i></td><td><strong style="font-size:10px;">Running</strong></td></tr>
+          <tr><td style="background-color:#eea796"><i class="bi bi-stack-overflow text-light" title="Status"></i></td><td><strong style="font-size:10px;">In Error</strong></td></tr>
+          <tr><td style="background-color:#848ce6"><i class="bi bi-stack-overflow text-light" title="Status"></i></td><td><strong style="font-size:10px;">Not Running and not started in the last 24h</strong></td></tr>
+        </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+<div id="canvas"class="mw-100" style="height: 300px"></div>
+
+</div>
+<%- include('partials/footer') %>
+
+<% if (typeof id != 'undefined') {var row = JSON.stringify(id)} else { var id =""}%>
+
+<script src="/datatables.net/js/jquery.dataTables.min.js" crossorigin="anonymous"></script> 
+<script src="/datatables.net-bs5/js/dataTables.bootstrap5.min.js" crossorigin="anonymous"></script> 
+<link rel="stylesheet" href="/datatables.net-bs5/css/dataTables.bootstrap5.min.css" crossorigin="anonymous">
+
+
+<script>
+    var rows = <%- JSON.stringify(id) %>;       
+</script>
+
+<script>
+   var isadmin = <%- JSON.stringify(isadmin) %>;       
+</script>
+<script src="/date-and-time/date-and-time.min.js" charset="utf-8"></script>
+<script>
+if (rows !== "" ) {
+    postDetail = rows;
+
+    var doimport = true;
+  }
+
+  var diagramUrl = '/wf/' + postDetail ;
+  
+  name = postDetail.replace(".bpmn", "");
+
+var bpmnViewer = new BpmnJS({
+  container: '#canvas'
+});
+$(document).ready(function () {
+    // $('#dtworkflows').DataTable();
+});
+
+async function openDiagram(bpmnXML) {
+  try {
+    await bpmnViewer.importXML(bpmnXML);
+    var canvas = bpmnViewer.get('canvas');
+    var overlays = bpmnViewer.get('overlays');
+    canvas.zoom('fit-viewport');
+    elementRegistry = bpmnViewer.get('elementRegistry');
+    
+
+    elementRegistry.forEach(function(elem, gfx) {
+      if (elem.businessObject.$instanceOf('bpmn:Task')){
+        
+        const val = elem.businessObject.name.split('-');        
+        var result = null;
+        $.ajax({
+        url: "/api/v1/tasks/" + name + "/" + val[0],
+        type: 'get',
+        dataType: 'json',
+        async: false,
+          success: function(data) {
+              result = data;
+          } 
+        });
+        
+          data = result;
+          var status = "Never Started";
+          styletd = "";          
+          styletd_comm = "";
+          comment = "";
+          hours_from_the_start = 0;
+          hours_from_the_end = 0;
+          currentdate = new Date();   
+          
+          if (data[0].last_start !== "") { 
+            start = date.parse(data[0].last_start, 'DD/MM/YYYY HH:mm:ss'); 
+            hours_from_the_start =  date.subtract( currentdate, start).toHours();
+          } else {start = ""}
+          if (data[0].last_end !== "") { 
+            end = date.parse(data[0].last_end, 'DD/MM/YYYY HH:mm:ss'); 
+            hours_from_the_end = date.subtract( currentdate, end).toHours();
+          } else {end = ""}
+          
+          if (data[0].status === 0 ) {
+            status = "Not Running";
+            comment = "The last run was " + hours_from_the_start.toFixed(2) + " hours ago";            
+            if(hours_from_the_start > 24) { 
+              styletd = 'style="background-color:#848ce6"';
+              styletd_comm = 'style="background-color:#848ce6"';
+              canvas.addMarker(data[0].jobs_id, 'morethan24');
+            } else {
+              styletd = 'style="background-color:#f3e6a2"';
+              canvas.addMarker(data[0].jobs_id, 'notrunning');
+            }              
+          }
+
+          if (data[0].status === 1) {canvas.addMarker(data[0].jobs_id, 'running');status = "Running";styletd = 'style="background-color:#91d9bf"';}
+          if (data[0].status === 2) {canvas.addMarker(data[0].jobs_id, 'error');status = "Error";styletd = 'style="background-color:#eea796"';}
+          
+        // });
+
+
+        var html = '';
+            html += '<tr><td>' + val[0] +'</td><td>' + data[0].jobs_description +' </td><td>' + data[0].last_start+' </td><td>' + data[0].last_end+' </td><td>' + status + '</td><td>' + comment +'</td><td ' + styletd + '><a id="editrow' + name +"/" + val[0] + '" class=editrow role=button aria-disabled="true"><i class="bi bi-stack-overflow text-dark" title="Status"></i></a></td></tr>';
+            $("#dtworkflows tbody").append(html);
+            
+            // $('#newRow').append(html);   
+      }
+      
+      // var elementToColor = elementRegistry.get('Activity_1k8523z');
+      
+    });
+    var table = $("#dtworkflows").DataTable({"pageLength": 5, "lengthChange": true});
+    // table.buttons().container().appendTo( '#dtworkflows_wrapper .col-md-7:eq(0)' );
+  } catch (err) {
+    console.error('could not import BPMN 2.0 diagram', err);
+    alert('could not import BPMN 2.0 diagram', err);
+  }
+}
+
+$(document).on('click', '.editrow[id^=editrow]', function() {    
+  if (isadmin >= 1 ) {
+    var id = this.id.replace("editrow", "");
+    event.preventDefault(); 
+    var url = "/tasks/edit/" + id;
+    location.replace(url);
+  } else { alert("you are not authorized to change the status, contact the admin!")}
+});
+
+
+
+$.get(diagramUrl, openDiagram, 'text').done();
+
+
+</script>

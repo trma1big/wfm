@@ -102,3 +102,12 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Personal changes 
+certificates/
+db/*.json
+db/*.xml
+wf/*.bpmn
+log
+*-xml.js
+

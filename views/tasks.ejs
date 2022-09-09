@@ -1,0 +1,163 @@
+<%- include('partials/header') %>    
+
+    <% if ( isadmin == '1') { %>
+        <div class="col"> 
+            <div class="row">
+            <div class="form-group">
+                <a class="dropdown-item" href="/tasks/upload_task"><span class="badge btn-outline-secondary btn-lg"><a class="w-100 btn btn-outline-secondary btn-sm"  href="/tasks/upload_task" role="button">Add new Task</a></span></a>
+            </div>
+        </div>
+    <% } %>
+
+        <div class="table-responsive-sm" ">
+            <table id="dtworkflows" class="table table-striped table-bordered" style="width:100%">
+            
+                <thead class="table-dark">
+                    <tr>                                          
+                      <th scope="col">id</th>
+                      <th scope="col">name</th>
+                      <th scope="col">file</th>
+                      <th scope="col">status</th>
+                      <th scope="col">last start</th>
+                      <th scope="col">last end</th>
+                      <th>Actions</th>
+                      <!-- <th></th> -->
+                    </tr>
+                </thead>  
+ 
+            </table>
+          </div>
+      </div>
+      <div id="myDelAlert" class="alert alert-warning alert-dismissible fade show" role="alert" >
+        <strong>WFM</strong> Removing Task or modifying Task BPMs file will clean the association on workflows  
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        
+        </button>
+      </div>
+    <div id="myDelAlert" class="alert alert-success alert-dismissible fade show" role="alert" style="display:none;">
+        <strong>WFM</strong> all done. Close up!!!.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div id="myDelAlertError" class="alert alert-danger alert-dismissible fade show" role="alert" style="display:none;">
+        <strong>WFM</strong> <div id="mesg">problem removing job! ask to admin.</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+      
+
+<%- include('partials/footer') %>
+<%- include('partials/render_tables') %>
+<script src="/datatables.net/js/jquery.dataTables.min.js" crossorigin="anonymous"></script> 
+<script src="/datatables.net-bs5/js/dataTables.bootstrap5.min.js" crossorigin="anonymous"></script> 
+<link rel="stylesheet" href="/datatables.net-bs5/css/dataTables.bootstrap5.min.css" crossorigin="anonymous">
+
+
+
+<script>
+
+    $(document).ready(function () {        
+        var x = $("#userh").html(); 
+        var disabled_editing = 0;
+        if (x !== "1") {
+            var disabled_editing = 1;
+        }
+        // alert(disabled_editing);
+        // alert(typeof disabled_editing);
+
+
+        var dt_master = $('#dtworkflows').DataTable(            
+            {
+            "ajax": {
+                "url": "/api/v1/list/tasks",
+                "dataSrc": function ( json ) {
+                    for ( var i=0, ien=json.length ; i<ien ; i++ ) {
+                        var element = {}
+                        element.id = i + 1;
+                        json[i].id = i + 1;
+                        if(typeof json[i].name === "undefined") { json[i].name = ""}
+                        if(typeof json[i].file === "undefined") { json[i].file = ""}
+                        if( json[i].status === 0) { json[i].status = "Not runnning"}
+                        if( json[i].status === 1) { json[i].status = "Runnning"}
+                        if( json[i].status === 2) { json[i].status = "Error"}   
+                    }
+                    // json.splice(0,1);
+                    return json;
+                }
+            },   "scrollX": false,         stateSave: true,
+            "columns": [       
+                { "data": "id" },                       
+                { "data": "name" },
+                { "data": "file" },                             
+                { "data": "status" },       
+                { "data": "last_start" },  
+                { "data": "last_end" },  
+                { "render": function(data, type, row) {                
+                    if (disabled_editing !== 1) {
+                        return '<span class="badge bg-danger"><a id="deleterow'+ row.name +'" class="delete" style="color: white;" role="button" ' + disabled_editing + '><i class="bi bi-trash3 text-light" title="Delete"></i></a></span>' +
+                        '<span class="badge bg-secondary"><a id="viewbpm'+ row.file +'" class="viewbpm ' + disabled_editing + '" style="color: white;" role="button" aria-disabled="true"><i class="bi bi-ticket-detailed text-light" title="View BPM"></i></a></span>' +
+                        '<span class="badge bg-warning"><a id="editbpm'+ row.file +'" class="editbpm ' + disabled_editing + '" style="color: white;" role="button" aria-disabled="true"><i class="bi bi-pencil text-light" title="Edit BPM"></i></a></span>'
+                    } 
+                        return  '<span class="badge bg-secondary"><a id="viewbpm'+ row.file +'" class="viewbpm" style="color: white;" role="button" aria-disabled="true"><i class="bi bi-ticket-detailed text-light" title="BPM"></i></a></span>' 
+                    
+                    
+                }}
+            ],
+                responsive: true,
+                "columnDefs": [
+                     { className: "dt-right", "targets": [6] }
+                ]
+            });
+        
+             
+    });
+
+
+
+    $(document).on('click', '.viewbpm[id^=viewbpm]', function() {              
+        var id = this.id.replace("viewbpm", "");
+        event.preventDefault(); 
+        var url = "/tasks/viewtask/task/" + id;
+        location.replace(url);
+    });
+
+    $(document).on('click', '.editbpm[id^=editbpm]', function() {              
+        var id = this.id.replace("editbpm", "");
+        event.preventDefault(); 
+        var url = "/tasks/modify_tasks/task/" + id;
+        location.replace(url);
+    });
+
+
+    $(document).on('click', '.delete[id^=deleterow]', function() {              
+        var id = this.id.replace("deleterow", "");
+        event.preventDefault();            
+        var url = "/tasks/delete/" + id;
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            beforeSend: function () {
+                if(confirm("vuoi procedere con la cancellazione?")){
+                    var go = 1;
+                } else { 
+                    return false;
+                }
+            },
+            success: function(result) {
+                $('#dtworkflows').DataTable().ajax.reload();
+                $('#myDelAlert').show();
+            },
+            error: function(jqXHR, exception) {
+                $('#myDelAlertError').show();
+                msg = "problem removing job! ------" + jqXHR.responseText + "--------"; 
+                $('#mesg').html(msg);
+            }
+        });
+    });
+
+
+
+</script>
+

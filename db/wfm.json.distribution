@@ -1,0 +1,39 @@
+{
+    "conf": {
+        "workflows": {
+            "workflow": [
+                {
+                    "name": "DEFAULT",
+                    "description": "DEFAULT",
+                    "status": "0",
+                    "lastrun": "",
+                    "lastend": "",
+                    "file": "",
+                    "entity": ""
+                }
+            ]
+        },
+        "tasks": {
+            "task": [
+                {
+                    "name": "DEFAULT",
+                    "file": "DEFAULT.bpmn",
+                    "jobs_id": "",
+                    "jobs": "",
+                    "jobs_description": "",
+                    "status": "",
+                    "last_start": "",
+                    "last_end": ""
+                }
+            ]
+        },
+        "entities": {
+            "entity": [
+                {
+                    "name": "ALL",
+                    "description": "ALL"
+                }
+            ]
+        }
+    }
+}

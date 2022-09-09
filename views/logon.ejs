@@ -1,0 +1,45 @@
+<%- include('partials/header') %>   
+
+
+<div id="myDelAlert" class="alert alert-success alert-dismissible fade show" role="alert" style="display:none;">
+    <strong>WFM</strong> wrong username or password, please retry.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>    
+
+<div id="login">  
+  <div class="container-fluid">
+      <div id="login-row" class="row justify-content-center align-items-center">
+          <div id="login-column" class="col-md-6">
+              <div id="login-box" class="col-md-12">
+                  <form id="login-form" class="form" action="/login" method="post">
+                      <h3 class="text-center text-secondary">Login</h3>
+                      <div class="form-group">
+                          <label for="username" class="text-secondary">Username:</label><br>
+                          <input type="text" name="username" id="username_" class="form-control">
+                      </div>
+                      <div class="form-group">
+                          <label for="password" class="text-secondary">Password:</label><br>
+                          <input type="password" name="password" autocomplete="on" id="password_" class="form-control">
+                      </div>
+                      <div class="form-group">                          
+                          <input type="submit" name="submit" class="btn btn-secondary btn-md" value="Login">
+                      </div>
+                      
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+  <%- include('partials/footer') %>
+  <script>
+    var error = <%- JSON.stringify(error) %>;    
+</script>
+<script>
+if (error === "1") {
+    $('#myDelAlert').show();
+}
+</script>

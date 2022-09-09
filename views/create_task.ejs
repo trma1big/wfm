@@ -1,0 +1,216 @@
+<%- include('partials/header') %>    
+
+    <link rel="stylesheet" href="/bpmn-js/dist/assets/bpmn-js.css">
+    <link rel="stylesheet" href="/bpmn-js/dist/assets/diagram-js.css">
+    <link rel="stylesheet" href="/bpmn-js/dist/assets/bpmn-font/css/bpmn.css">
+    <script src="/bpmn-js/dist/bpmn-modeler.development.js"></script>
+<style>
+    #download_xml {
+    position: fixed;
+    bottom: 20px;
+    left: 250px;
+  }
+   #canvas {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .diagram-note {
+    background-color: rgba(66, 180, 21, 0.7);
+    color: White;
+    border-radius: 5px;
+    font-family: Arial;
+    font-size: 12px;
+    padding: 5px;
+    min-height: 16px;
+    width: 50px;
+    text-align: center;
+  }
+
+  .djs-palette {
+    position: absolute;
+    left: 1100px;
+    top: 1px;
+    box-sizing: border-box;
+  }
+</style>
+
+<div class="content" id="drop-zone" class="mw-100" >
+<div id="canvas" class="mw-100" style="height: 400px" ></div>
+
+<a id="download_xml" name="download_xml" href title="download BPMN diagram">BPM DIAGRAM ( click to download it )</a>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio6" value="6" checked>
+  <label class="form-check-label" for="inlineRadio1">6 tasks</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="4">
+  <label class="form-check-label" for="inlineRadio1">4 tasks</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2">
+  <label class="form-check-label" for="inlineRadio1">2 tasks</label>
+</div>
+<div id="myDelAlert" class="alert alert-info alert-dismissible fade show" role="alert" style="display:none;">
+  <strong>WFM</strong> Select checkbox or drag and drop BPMn files to change template, modify as you prefer.....<br> when done, download the created BPMn diagram (using the link below ) in order to be used on <a href="/tasks/upload_task">create task functionality</a>  
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>          
+<div id="myAlert" class="alert alert-danger alert-dismissible fade show" role="alert" style="display:none;">
+  <strong>WFM</strong> the BPMn diagram have to contains a name for the task and a "Text Annotation" that will be used as Description
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>          
+<%- include('partials/footer') %>
+
+
+
+<script>
+  
+  $('#myDelAlert').show();
+  $('#myAlert').show();
+ var container = $('#drop-zone');
+  var diagramUrl = '/wf/default_6.bpmn.distribution';
+
+  var bpmnModeler = new BpmnJS({
+        container: '#canvas',
+        keyboard: {
+          bindTo: window
+        }
+      });
+      function setEncoded(link, name, data) {
+        var encodedData = encodeURIComponent(data);
+
+        if (data) {
+          link.addClass('active').attr({
+            'href': 'data:application/bpmn20-xml;charset=UTF-8,' + encodedData,
+            'download': name
+          });
+        } else {
+          link.removeClass('active');
+        }
+      }
+      /**
+       * Save diagram contents and print them to the console.
+       */
+      async function setFile () {
+      switch($(this).val()) {
+          case '6' :
+              $.get("/wf/default_6.bpmn.distribution", openDiagram, 'text');
+              // alert();
+              break;
+          case '4' :
+              $.get("/wf/default_4.bpmn.distribution", openDiagram, 'text');
+              // alert("wf/default_4.bpmn.distribution");
+              break;
+          case '2' :
+              $.get("/wf/default_2.bpmn.distribution", openDiagram, 'text');
+              // alert("wf/default_2.bpmn.distribution");
+              break;
+      }            
+      }
+
+
+      async function exportDiagram() {
+
+        try {
+          var downloadLink = $('#download_xml'); 
+          
+          var xml = await bpmnModeler.saveXML({ format: true });
+          
+          
+          setEncoded(downloadLink, 'diagram.bpmn', xml.xml);
+          } catch (err) {
+
+          console.error('could not save BPMN 2.0 diagram', err);
+        }
+      }
+
+      function hide_toobar_elements (){
+        $(".bpmn-icon-intermediate-event-none").hide();  
+          $(".bpmn-icon-gateway-none").hide();
+          $(".bpmn-icon-subprocess-expanded").hide();
+          $(".bpmn-icon-subprocess-expanded").hide();
+          $(".bpmn-icon-data-store").hide();
+          $(".bpmn-icon-participant").hide();
+          $(".bpmn-icon-data-object").hide();
+          $(".bpmn-icon-group").hide();
+          $(".bpmn-icon-gateway-none").hide();  
+      }
+
+      /**
+       * Open diagram in our modeler instance.
+       *
+       * @param {String} bpmnXML diagram to display
+       */
+      async function openDiagram(bpmnXML) {
+
+        // import diagram
+        try {
+
+          await bpmnModeler.importXML(bpmnXML);
+          hide_toobar_elements();
+         
+          var canvas = bpmnModeler.get('canvas');
+          var overlays = bpmnModeler.get('overlays');
+          
+          canvas.zoom('fit-viewport');
+        } catch (err) {
+
+          console.error('could not import BPMN 2.0 diagram', err);
+        }
+      }
+      function registerFileDrop(container, callback) {
+
+function handleFileSelect(e) {
+  e.stopPropagation();
+  e.preventDefault();
+
+  var files = e.dataTransfer.files;
+  var file = files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var xml = e.target.result;
+    callback(xml);
+  };
+  reader.readAsText(file);
+}
+
+function handleDragOver(e) {
+  e.stopPropagation();
+  e.preventDefault();
+
+  e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+}
+
+container.get(0).addEventListener('dragover', handleDragOver, false);
+container.get(0).addEventListener('drop', handleFileSelect, false);
+}
+
+
+// file drag / drop ///////////////////////
+
+// check file api availability
+if (!window.FileList || !window.FileReader) {
+window.alert(
+  'Looks like you use an older browser that does not support drag and drop. ' +
+  'Try using Chrome, Firefox or the Internet Explorer > 10.');
+} else {
+registerFileDrop(container, openDiagram);
+}
+
+      // load external diagram file via AJAX and open it
+      $.get(diagramUrl, openDiagram, 'text');
+
+      // wire save button
+      $('#save-button').click(exportDiagram);
+      $('#download_xml').click(exportDiagram);
+      $('.form-check-input').click(setFile);
+      
+        
+
+</script>

@@ -1,0 +1,72 @@
+<script>
+
+
+
+function alert_visibility( id, logid, method  ) {  
+ 
+      $('#senderdiv' + logid).prop('hidden', true);   
+      $('#subjectdiv' + logid).prop('hidden', true);   
+      $('#smtpdiv' + logid).prop('hidden', true);      
+      $('#portdiv' + logid).prop('hidden', true);      
+      $('#emaildiv' + logid).prop('hidden', true);  
+      $('#logoutputdiv' + logid).prop('hidden', true);
+      $('#sender' + logid).removeAttr('required');
+      $('#subject' + logid).removeAttr('required');
+      $('#smtp' + logid).removeAttr('required');
+      $('#port' + logid).removeAttr('required');
+      $('#email' + logid).removeAttr('required');
+      $('#logoutput' + logid).removeAttr('required');     
+}
+
+
+
+
+
+
+
+function Enable_datalist_entities()
+{
+  $.ajax({
+            url: '/api/v1/list/entities',
+            type: 'get',
+            data: '',
+            dataType: 'json',
+            success:function(response){
+                // alert("inside success");
+                var len = response.length;
+
+                $("#entitieslists").empty();
+                for( var i = 0; i<len; i++){                    
+                    var name = response[i].name;                                        
+                    var description = response[i].description;
+                    $("#entitieslists").append("<option value='"+name+"'>"+description+"</option>");
+                    
+                }
+            }
+        });
+}
+
+function Enable_datalist_files()
+{
+  $.ajax({
+            url: '/api/v1/list/tasks',
+            type: 'get',
+            data: '',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                $("#bpmfilelists").empty();
+                for( var i = 0; i<len; i++){                    
+                    var name = response[i].name;                    
+                    var file = response[i].file;
+                    $("#bpmfilelists").append("<option value='"+name+"'>"+file+"</option>");
+                }
+            }
+        });
+}
+
+
+
+
+
+</script>

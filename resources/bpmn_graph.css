@@ -1,0 +1,65 @@
+#canvas {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .diagram-note {
+    background-color: rgba(66, 180, 21, 0.7);
+    color: White;
+    border-radius: 5px;
+    font-family: Arial;
+    font-size: 12px;
+    padding: 5px;
+    min-height: 16px;
+    width: 50px;
+    text-align: center;
+  }
+  .notrunning:not(.djs-connection) .djs-visual > :nth-child(1) {
+      fill: rgb(243, 230, 162) !important; /* color elements as green */
+    }
+
+    .notrunning-overlay {
+      background-color: rgb(243, 230, 162); /* color elements as green */
+      opacity: 0.4;
+      pointer-events: none; /* no pointer events, allows clicking through onto the element */
+      border-radius: 10px;
+    }
+
+    .morethan24:not(.djs-connection) .djs-visual > :nth-child(1) {
+        fill: rgb(132, 140, 230) !important; /* color elements as green */
+      }
+  
+      .morethan24-overlay {
+        background-color: rgbrgb(132, 140, 230); /* color elements as green */
+        opacity: 0.4;
+        pointer-events: none; /* no pointer events, allows clicking through onto the element */
+        border-radius: 10px;
+      }
+  
+
+  .running:not(.djs-connection) .djs-visual > :nth-child(1) {
+      fill: rgb(145, 217, 191) !important; /* color elements as green */
+    }
+
+    .running-overlay {
+      background-color: rgb(145, 217, 191); /* color elements as green */
+      opacity: 0.4;
+      pointer-events: none; /* no pointer events, allows clicking through onto the element */
+      border-radius: 10px;
+    }
+
+    .error:not(.djs-connection) .djs-visual > :nth-child(1) {
+      fill: rgb(238, 167, 150) !important; /* color elements as green */
+    }
+
+    .error-overlay {
+      background-color: rgb(238, 167, 150); /* color elements as green */
+      opacity: 0.4;
+      pointer-events: none; /* no pointer events, allows clicking through onto the element */
+      border-radius: 10px;
+    }
+
+  .needs-discussion:not(.djs-connection) .djs-visual > :nth-child(1) {
+    stroke: rgb(145, 217, 191) !important; /* color elements as red */
+  }

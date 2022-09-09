@@ -1,0 +1,53 @@
+<script>
+
+function renderFileslistHistory() {
+    var wrapper = $('<div  class="card" ><div class="card-header text-white bg-dark mb-3"><h5 class="card-title">History Files </h5></div>');
+    cTable= '<table id="dtfilesHistory" class="table table-striped table-bordered" style="width:100%">'+
+                '<thead>' +
+                    '<tr>' +
+                    //   '<th scope="col">id</th>' 
+                      '<th scope="col">file</th>' +
+                      '<th scope="col">date</th>' +
+                      '<th scope="col">action</th>' +
+                    '</tr>'+
+                '</thead>' +
+            '</table>';
+    wrapper.append(cTable);
+    wrapper.append('</div>');
+    return wrapper;
+}
+
+
+function wraptext (text, maxLineLength) {
+  const words = text.replace(/[\r\n]+/g, ' ').split(' ');
+  let lineLength = 0;
+  
+  // use functional reduce, instead of for loop 
+  return words.reduce((result, word) => {
+    if (lineLength + word.length >= maxLineLength) {
+      lineLength = word.length;
+      return result + `\n${word}`; // don't add spaces upfront
+    } else {
+      lineLength += word.length + (result ? 1 : 0);
+      return result ? result + ` ${word}` : `${word}`; // add space only when needed
+    }
+  }, '');
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+    }
+</script>

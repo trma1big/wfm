@@ -1,0 +1,62 @@
+<%- include('partials/header') %>    
+          <!-- <a class="btn btn-lg btn-lg" href="/tasks" role="button">Back &raquo;</a>   -->
+          <div id="myDelAlert" class="alert alert-warning alert-dismissible fade show" role="alert" >
+            <strong>WFM</strong> modify status for task <% if (typeof wf != 'undefined') { %><%= wf %><% } %> job <% if (typeof job != 'undefined') { %><%= job %><% } %>  
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+            </button>
+          </div>
+          
+            <form id="create_form" method="POST" action="/tasks/edit" class="was-validated" validate>         
+              <!-- <input form="create_form" type="text" name="id" id="id" value="<% if (typeof id != 'undefined') { %><%= id %><% } %>" hidden> -->              
+              <input form="create_form" type="text" name="wsname" id="wsname" value="<% if (typeof wf != 'undefined') { %><%= wf %><% } %>" hidden>
+              <input form="create_form" type="text" name="taskname" id="taskname" value="<% if (typeof job != 'undefined') { %><%= job %><% } %>" hidden>
+              
+            </div>
+            <div class="col-auto">
+                <label for="status">Status</label>
+                <select  form="create_form" id="status" name="status" class="form-control" required>
+                    <option value="">Choose...</option>
+                    <% if (typeof postDetail != 'undefined') { if(postDetail.conf.tasks.task[0].status == 0) { setselected = "selected" } else { setselected = "" }%>                                  
+                    <% } else{ setselected = "" } %>  
+                    <option value="0" <%= setselected %>>Not Running</option>
+                  
+
+                    <% if (typeof postDetail != 'undefined') { if(postDetail.conf.tasks.task[0].status == 1) { setselected = "selected" } else { setselected = "" }%>                                  
+                    <% } else{ setselected = "" } %> 
+                    <option value="1" <%= setselected %>>Running</option>     
+
+                    <%  if (typeof postDetail != 'undefined') { if(postDetail.conf.tasks.task[0].status == 2) { setselected = "selected" } else { setselected = "" }%>                                  
+                    <% } else{ setselected = "" } %> 
+                    <option value="2" <%= setselected %>>Error</option>
+                </select>
+                <div class="invalid-tooltip">Select input type</div>
+            </div>
+                    
+
+                <div class="form-row border border-bottom-0">
+                  <div class="col form-group">
+                    <a class="btn btn-lg btn-lg btn-outline-primary" href="/" role="button">EXIT</a><button type="submit" class="btn btn-lg btn-lg btn-outline-success">CHANGE</button>
+                  </div>
+              </div>                  
+            </form>  
+            
+              
+<%- include('partials/footer') %>
+<%- include('partials/rows_manager') %>
+
+
+<script>
+
+
+
+  $( "#create_form" ).submit(function( event ) {
+
+    event.preventDefault();
+
+    var posting = $.post( "/api/v1/chg_task_status", $( "#create_form" ).serialize() );
+    posting.done(function( data ) {
+        location.replace("/workflows");
+
+    });
+});
+</script>

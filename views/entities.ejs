@@ -1,0 +1,162 @@
+<%- include('partials/header') %>    
+    
+            <div id="myDelAlert" class="alert alert-success alert-dismissible fade show" role="alert" style="display:none;">
+                <strong>WFM</strong> all done. Close up!!!.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="myDelAlertError" class="alert alert-danger alert-dismissible fade show" role="alert" style="display:none;">
+                <strong>WFM</strong> <div id="mesg">problem removing the entity! ask to admin.</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+         
+            <!-- <div class="row">     -->
+                        <div class="col"> 
+                            <div class="row">
+                            <div class="form-group">
+                                <a class="dropdown-item" href="/entities/create"><span class="badge btn-outline-secondary btn-lg"><a class="w-100 btn btn-outline-secondary btn-sm"  href="/entities/create" role="button">Add new entity</a></span></a>
+                            </div>
+                        </div>
+            <!-- </div>             -->
+        
+        <div class="table-responsive-sm" >
+            <table id="dtworkflows" class="table table-striped table-bordered" >            
+
+            <!-- <table id="dtworkflows" class="table compact table-hover table-sm table-bordered w-auto" > -->
+                <thead class="table-dark">
+                    <tr>                                          
+                      <th scope="col">id</th>
+                      <th scope="col">name</th>
+                      <th scope="col">description</th>
+                      <th>Actions</th>
+                    </tr>
+                </thead>  
+ 
+            </table>
+          </div>
+      </div>
+      <div id="myModal" class="modal fade" tabindex="-1"  aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content modal-xl">
+                <div class="modal-header">
+                    <h3 id="modalTitle"></h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button class="btn" data-bs-dismiss="modal" aria-hidden="true">Close</button>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div id="myModal2" class="modal fade" tabindex="-1"  role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content modal-xl">
+                <div class="modal-header">
+                    <h3 id="modalTitleselect"></h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-bodySelect"></div>
+                <div class="modal-footer">
+                    <button class="btn" data-bs-dismiss="modal" aria-hidden="true">Close</button>
+                </div>
+            </div>
+        </div>
+      </div>
+      
+<%- include('partials/footer') %>
+
+<script src="/datatables.net/js/jquery.dataTables.min.js" crossorigin="anonymous"></script> 
+<script src="/datatables.net-bs5/js/dataTables.bootstrap5.min.js" crossorigin="anonymous"></script> 
+<link rel="stylesheet" href="/datatables.net-bs5/css/dataTables.bootstrap5.min.css" crossorigin="anonymous">
+
+<script>
+
+    $(document).ready(function () {        
+        var x = $("#userh").html(); 
+        var disabled_editing = 0;
+        if (x !== "1") {
+            var disabled_editing = 1;
+        }
+
+
+        var dt_master = $('#dtworkflows').DataTable(            
+            {
+            "ajax": {
+                "url": "/api/v1/list/entities",
+                "dataSrc": function ( json ) {
+                    for ( var i=0, ien=json.length ; i<ien ; i++ ) {
+                        var element = {}
+                        element.id = i;
+                        json[i].id = i;
+                            if(typeof json[i].description === "undefined") { json[i].description = ""}
+                            
+                    }
+                    json.splice(0,1);
+                    return json;
+                }
+            },   "scrollX": false,         stateSave: true,
+            "columns": [       
+                { "data": "id" },                       
+                { "data": "name" },
+                { "data": "description" },  
+                { "render": function(data, type, row) {
+                   
+                    return '<span class="badge bg-danger"><a id="deleterow'+ row.id +'" class="delete" style="color: white;" role="button" ' + disabled_editing + '><i class="bi bi-trash3 text-light" title="Delete"></i></a></span>' +
+                    '<span class="badge bg-warning"><a id="editrow'+ row.id +'" class="editrow ' + disabled_editing + '" style="color: white;" role="button" aria-disabled="true"><i class="bi bi-pencil text-light" title="Edit"></i></a></span>' 
+                   
+                }}
+            ],
+                responsive: true,
+                "columnDefs": [
+                     { className: "dt-right", "targets": [3] }
+                ]
+            });
+          
+    });
+
+    $(document).on('click', '.editrow[id^=editrow]', function() {              
+        var id = parseInt(this.id.replace("editrow", ""));
+        event.preventDefault(); 
+        var url = "/entities/edit/" + id;
+        location.replace(url);
+    });
+
+
+    $(document).on('click', '.delete[id^=deleterow]', function() {              
+        var id = parseInt(this.id.replace("deleterow", ""));
+        event.preventDefault();            
+        var url = "/entities/delete/" + id;
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            beforeSend: function () {
+                if(confirm("vuoi procedere con la cancellazione?")){
+                    var go = 1;
+                } else { 
+                    return false;
+                }
+            },
+            success: function(result) {
+                $('#dtworkflows').DataTable().ajax.reload();
+                $('#myDelAlert').show();
+            },
+            error: function(jqXHR, exception) {
+                $('#myDelAlertError').show();
+                msg = "problem removing entity! ------" + jqXHR.responseText + "--------"; 
+                $('#mesg').html(msg);
+            }
+        });
+    });
+
+    
+    $(".alert").delay(4000).slideUp(200, function() {
+    $(this).alert('close');
+    });    
+
+</script>
+

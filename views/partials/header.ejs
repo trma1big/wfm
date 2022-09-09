@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">    
+    <meta name="description" content="WFM">
+    <meta name="author" content="Mtrezzi">    
+  </head>
+
+  <body>
+    <script src="/jquery/dist/jquery.min.js" ></script>    
+    <script type="text/javascript" src="/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/@popperjs/core/dist/umd/popper.min.js"></script>    
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+      body {	padding-right: 5px; padding-left: 5px;  height: 100%; }
+      nav .navbar-nav li a{
+          color: black !important;
+      }
+      .navbar-nav .nav-pills .nav-link.active, .nav-pills .show>.nav-link {    color: #fff;    background-color: #505255;}
+      table.dataTable td {   font-size: 0.9em;}
+    </style>
+
+<% if ( typeof user !== 'undefined' && user !== '')  { %>
+<script>
+myTimeout = "";
+var ajaxCall = function(){
+  $.ajax({
+        method: 'GET',
+        url: '/check_expired_jwt', 
+        success: function(result) {        
+            secondsSinceEpoch = Math.round(Date.now() / 1000)
+            diff = result.exp - secondsSinceEpoch            
+            if ((diff/60) <= 1) {                
+                $("#liveModal").modal("show");
+                makeProgress();
+            }
+        },
+        statusCode: {
+          401: function() {
+            location.href = "/";
+          }
+        }
+
+    })
+    
+    }
+    var retryTimeInMilliseconds = 20000;
+    var interval =setInterval(ajaxCall,retryTimeInMilliseconds)
+    
+    var i = 100;
+    var i_text = 60;
+    function makeProgress(){
+      var bar = document.querySelector(".progress-bar");
+      if(i_text > 0){
+          i = i - (100/60); 
+          i_text = i_text - 1 ;         
+          bar.style.width = i + "%";
+          bar.innerText = i_text;
+      }
+      else {
+        location.href = "/";
+      }
+      tim = setTimeout("makeProgress()", 1000);
+   }
+
+    function logout() {      
+      clearTimeout(myTimeout);
+      location.href = "/logoff";
+    }
+
+    function Refresh_JWT() {
+      clearInterval(tim);
+      $.ajax({ method: 'POST',
+        url: '/refresh', })
+        $("#liveModal").modal("hide");
+        // $("#liveToast").toast("hide");
+    }
+    
+</script>
+<% } %>
+    <% if ( typeof user !== 'undefined' && user !== '')  { %>
+      <div hidden id=userh><%= isadmin %></div>
+    <% } %>
+
+ 
+
+    <header class="py-1 mb-4 border-bottom shadow">
+      <div class="container-fluid align-items-center d-flex">
+          <div class="flex-shrink-1">
+              <a href="/" class="d-flex align-items-center col-lg-4 mb-2 mb-lg-0 link-dark text-decoration-none">
+                  <i class="bi bi-stack-overflow fs-2 text-dark">WFM</i>
+              </a>
+          </div>
+          <div class="flex-grow-1 d-flex align-items-center">
+              <form class="w-100 me-3">
+                  
+              </form>
+              <% if ( typeof user !== 'undefined' && user !== '')  {  %>                    
+              <div class="flex-shrink-0 dropdown">
+                  <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                      <img src="/public/profile.jpg" alt="user" width="32" height="32" class="rounded-circle"> <%= user %>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser2" >
+                      <li><a class="dropdown-item" href="/logoff">Sign out</a></li>
+                  </ul>
+              </div>
+              <% }%>
+          </div>
+      </div>
+  </header>
+  
+  <% if ( typeof user !== 'undefined' && user !== '')  { %>
+  <div class="container-fluid" >
+    <!-- <div class="container-fluid pb-3 flex-grow-1 d-flex flex-column flex-sm-row overflow-auto " > -->
+      <div class="row   ">
+        <div class="col-auto px-0">
+          <!-- <div class="col-auto px-0"> -->
+        <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" class="border rounded-3 p-1 text-decoration-none link-dark"><i class="bi bi-list bi-lg py-2 p-1"></i></a>
+        <div id="sidebar" class="collapse collapse-horizontal show ">
+        <div id="sidebar-nav" class="list-group border-0 rounded-0 text-sm-start" style="width: 200px;">
+        <!-- <aside class="col-sm-3 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0 pb-3" style="width: 200px;"> -->
+          <!-- <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" class="border rounded-3 p-1 text-decoration-none link-dark"><i class="bi bi-list bi-lg py-2 p-1"></i> Menu</a> -->
+                         
+            <div class="bg-light border rounded-3 p-1 h-100 sticky-top">
+                  <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate">
+                      <li class="nav-item">
+                          <a href="/" class="nav-link px-2 text-truncate link-dark">
+                              <i class="bi bi-house fs-5"></i>
+                              <span class="d-none d-sm-inline">Home</span>
+                          </a>
+                      </li>
+                      <a href="#" data-bs-target="#action" data-bs-toggle="collapse" class="border rounded-3 p-1 text-decoration-none link-dark"><i class="bi bi-list bi-lg py-2 p-1">ACTION</i></a>
+                      <div id="action" class="collapse collapse-vertical show ">
+                      <li>
+                          <a href="/workflows" class="nav-link px-2 text-truncate link-dark">
+                              <i class="bi bi-window-plus fs-5"></i>
+                              <span class="d-none d-sm-inline">Workflows</span>
+                          </a>
+                      </li>
+                      <% if ( typeof isadmin !== 'undefined' && ((isadmin === 1) || (isadmin === 3)))  { %>
+                      <li>
+                          <a href="/tasks" class="nav-link px-2 text-truncate link-dark"><i class="bi bi-window-plus fs-5"></i>
+                              <span class="d-none d-sm-inline">tasks</span> </a>
+                      </li>
+                      <li>
+                          <a href="/tasks/create_task" class="nav-link px-2 text-truncate link-dark"><i class="bi bi-brush fs-5"></i>
+                              <span class="d-none d-sm-inline">Editor BPMn</span> </a>
+                      </li>
+                      </div>                      
+                      <% } %>
+                      <% if ( typeof isadmin !== 'undefined' && (isadmin === 1))  { %>
+                      
+                      <a href="#" data-bs-target="#admin" data-bs-toggle="collapse" class="border rounded-3 p-1 text-decoration-none link-dark"><i class="bi bi-list bi-lg py-2 p-1">ADMIN</i></a>
+                      <div id="admin" class="collapse collapse-vertical show">
+                      <li>
+                          <a href="/users" class="nav-link px-2 text-truncate link-dark"><i class="bi  bi-universal-access fs-5"></i>
+                              <span class="d-none d-sm-inline">Users</span> </a>
+                      </li>
+                      <li>
+                        <a href="/entities" class="nav-link px-2 text-truncate link-dark"><i class="bi  bi-universal-access fs-5"></i>
+                            <span class="d-none d-sm-inline">Entities</span> </a>
+                    </li>
+                    <li>
+                      <a href="/download" class="nav-link px-2 text-truncate link-dark" ><i class="bi bi-cloud-download fs-5"></i>
+                          <span class="d-none d-sm-inline">Get Conf</span> </a>
+                    </li>
+                      </div>
+                      <% } %>
+                  </ul>
+              </div>
+         
+          <!-- </aside> -->
+            </div>
+        </div>
+      </div>
+      
+      <!-- </div> -->
+          <% } %>
+          <!-- <main class="col ps-md-2 pt-2"> -->
+            
+          <main class="col overflow-auto h-100 w-100">
+            <div class="bg-light border rounded-3 p-3">
+
+              <div class="modal fade" id="liveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">WFM Security</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      The session Token is expiring
+                          <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" aria-valuenow="75" aria-valuemin="0" aria-valuemax="60" style="width: 0%"></div>
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary" onclick="Refresh_JWT()" >extend</button>
+                      <button type="button" class="btn btn-primary" onclick="logout()" >logout</button>
+                    </div>
+                  </div>
+                </div>
+              </div>

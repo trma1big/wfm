@@ -1,0 +1,96 @@
+<%- include('partials/header') %>    
+            <a class="btn btn-lg btn-lg" href="/users" role="button">list users &raquo;</a>             
+            
+            <form id="create_form" method="POST" action="/users/create" class="was-validated" validate>         
+                    <input type="text" name="id" id="id" value="<% if (typeof id != 'undefined') { %><%= id %><% } %>" hidden>
+                    <span class="badge bg-secondary">Users Management</span>                 
+                    <div class="row">
+                      <%= readonly %>
+                      <div class="form-group col-md-6">
+                        <label for="username">username</label>
+                        <% var readonly = ''; var disabled = ''; %>
+                        <% if (typeof id != 'undefined') { if (id == 0)  { readonly = 'readonly'; disabled = 'disabled'}} %>
+                        <input <%= readonly %> type="text" class="form-control" name="username" id="username" placeholder="username" value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.username %><% } %>" required>
+                        <div class="invalid-tooltip">
+                          Please fill the input 
+                        </div>
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="password">password <%= readonly %></label>
+                        <input type="password" class="form-control" name="password" id="password" autocomplete="current-password" placeholder="password" value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.password %><% } %>" required>
+                        <div class="invalid-tooltip">
+                          Please fill the input
+                        </div>
+                      </div>
+                      <span class="badge bg-secondary">Entity</span> 
+                      <div class="row">
+                        <div class="col">
+                        
+                        <input <%= readonly %> id="entity" name="entity" class="form-control" list="entitieslists" required value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.entity %><% } %>">
+                        <datalist id="entitieslists">                            
+                        </datalist>
+  
+                        <div class="invalid-tooltip">
+                          Select Source files
+                        </div>
+                      </div>    
+                      <div class="row">             
+                      <div class="col-md-4 form-group">
+                        <div class="col-md-4 form-group">
+                          <div class="form-check">                    
+                            <% if (typeof postDetail != 'undefined') { %>
+                              <% if (postDetail.admin == 0) { setcheck = "checked" } else {setcheck = ""} %>                      
+                            <%} else { setcheck = "" }%>
+                              <input <%= setcheck %> <%= disabled %> class="form-check-input" type="radio" value=0 name="admin" id="admin">                            
+                              <label class="form-check-label" for="invalidCheck"><label for="admin"><span class="badge bg-secondary">standard user</span></label>  
+                            </div>
+                          <!-- </div> -->
+                          <!-- <div class="col-md-4 form-group"> -->
+                            <div class="form-check">                          
+                              <% if (typeof postDetail != 'undefined') { %>
+                                <% if (postDetail.admin == 2) { setcheck = "checked" } else {setcheck = ""} %>                      
+                              <%} else { setcheck = "" }%>
+                              <input <%= setcheck %> <%= disabled %> class="form-check-input" type="radio" value=2 name="admin" id="admin">                            
+                              <label class="form-check-label" for="invalidCheck"><label for="admin"><span class="badge bg-secondary">standard user with change status right</span></label>  
+                        </div>
+                      <!-- </div> -->
+                      <!-- <div class="col-md-4 form-group"> -->
+                        <div class="form-check">                          
+                          <% if (typeof postDetail != 'undefined') { %>
+                            <% if (postDetail.admin == 3) { setcheck = "checked" } else {setcheck = ""} %>                      
+                          <%} else { setcheck = "" }%>
+                          <input <%= setcheck %> <%= disabled %> class="form-check-input" type="radio" value=3 name="admin" id="admin">                            
+                          <label class="form-check-label" for="invalidCheck"><label for="admin"><span class="badge bg-secondary">Editor</span></label>  
+                    </div>
+                  <!-- </div> -->
+                        <div class="form-check">                          
+                          <% if (typeof postDetail != 'undefined') { %>
+                            <% if (postDetail.admin == 1) { setcheck = "checked" } else {setcheck = ""} %>                      
+                          <%} else { setcheck = "" }%>
+                              <input <%= setcheck %> <%= disabled %> class="form-check-input" type="radio" value=1 name="admin" id="admin">                            
+                              <label class="form-check-label" for="invalidCheck"><label for="admin"><span class="badge bg-secondary">full admin</span></label>  
+                          </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    
+
+                <div class="form-row border border-bottom-0">
+                  <div class="col form-group">
+                    <a class="btn btn-lg btn-lg btn-outline-primary" href="/" role="button">EXIT</a><button type="submit" class="btn btn-lg btn-lg btn-outline-success">CHANGE</button>
+                  </div>
+              </div>                  
+            </form>  
+            
+              
+<%- include('partials/footer') %>
+<%- include('partials/rows_manager') %>
+
+
+<script>
+   $(document).ready(function () {
+    Enable_datalist_entities();    
+  });
+
+</script>

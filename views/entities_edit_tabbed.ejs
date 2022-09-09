@@ -1,0 +1,103 @@
+<%- include('partials/header') %>    
+
+
+            <!-- <a class="btn btn-lg btn-lg" href="/entities" role="button">Back &raquo;</a>   -->
+               
+           
+            <form class="tab-content needs-validation" id="create_form" method="POST" action="/entities/create" novalidate>
+                    <input form="create_form" type="text" name="id" id="id" value="<% if (typeof id != 'undefined') { %><%= id %><% } %>" hidden>
+                                        
+                    <span class="badge bg-secondary">MAIN CONF</span>                 
+                    <div class="row">
+                      <div class="col">
+                        <label for="name">Name</label>
+                        <input form="create_form" type="text" class="form-control" name="name" id="name" placeholder="Name" value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.name %><% } %>" required>
+                        <div class="invalid-tooltip">
+                         Please fill the input
+                        </div>
+                      </div>
+                      <div class="col">
+                        <label for="description">Description</label>
+                        <input form="create_form" type="text" class="form-control" name="description" id="description" placeholder="description" value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.description %><% } %>" required>
+                        <div class="invalid-tooltip">
+                         Please fill the input
+                        </div>
+                      </div>
+                     
+                    </div>                    
+                    <a class="btn btn-lg btn-lg btn-outline-primary" href="/entities" role="button">EXIT </a> <button type="submit" class="btn btn-lg btn-lg btn-outline-success">CHANGE</button>
+                  </form>
+                
+                                                
+            
+            
+              
+<%- include('partials/footer') %>
+<%- include('partials/rows_manager') %>
+
+<% if (typeof postDetail != 'undefined') {var row = JSON.stringify(postDetail)} else { var postDetail =""}%>
+
+<script>
+    var rows = <%- JSON.stringify(postDetail) %>;    
+</script>
+
+<script>
+  if (rows !== "" ) {
+    postDetail = rows;
+    var doimport = true;
+  }
+
+  var num_alert = 0;
+  var num_transf = 0;
+
+  $(document).ready(function () {
+    Enable_datalist_entities();
+    Enable_datalist_files();
+  });
+
+
+ (function () {
+  'use strict'
+  // var forms = document.querySelectorAll('.needs-validation')
+  const forms = document.querySelectorAll('.needs-validation')
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {  
+          event.preventDefault()
+          event.stopPropagation()
+          $("#nav-main > i").removeClass('fa-times text-danger');          
+          var errorElements = document.querySelectorAll("input.form-control:invalid");
+          for (let i = 0; i < errorElements.length; i++) {
+            switch (errorElements[i].parentNode.parentNode.parentNode.id) {
+              case "step1":
+                $("#nav-main > i").addClass('fa-times text-danger');
+                break;
+              case "step2":
+                $("#nav-srcdst > i").addClass('fa-times text-danger');
+                break;
+              case "step3":
+                $("#nav-attribute > i").addClass('fa-times text-danger');
+                break;
+              case "step4":
+                $("#nav-naming > i").addClass('fa-times text-danger');
+                break;
+              case "step5":
+                $("#nav-notifications > i").addClass('fa-times text-danger');
+                break;
+            }
+            
+            
+          }
+          
+         
+          // errorElements[5].parentNode.parentNode.parentNode
+        }        
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+
+
+</script>

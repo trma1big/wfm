@@ -1,0 +1,115 @@
+<%- include('partials/header') %>    
+
+            <!-- <a class="btn btn-lg btn-lg" href="/workflows" role="button">Back &raquo;</a>   -->
+                          
+            <form class="tab-content needs-validation" id="create_form" method="POST" action="/workflows/create" novalidate>
+                    <input hidden form="create_form" type="text" name="id" id="id" value="<% if (typeof id != 'undefined') { %><%= id %><% } %>">
+                                        
+                    <span class="badge bg-secondary">MAIN CONF</span>                 
+                    <div class="row">
+                      <div class="col">
+                        <label for="name">Name</label>
+                        <input form="create_form" type="text" class="form-control" name="name" id="name" placeholder="Name" value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.name %><% } %>" required>
+                        <div class="invalid-tooltip">
+                         Please fill the input
+                        </div>
+                      </div>
+                      <div class="col">
+                        <label for="description">Description</label>
+                        <input form="create_form" type="text" class="form-control" name="description" id="description" placeholder="description" value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.description %><% } %>" required>
+                        <div class="invalid-tooltip">
+                         Please fill the input
+                        </div>
+                      </div>
+                      <!-- <div class="col">
+                          <label for="status">Status</label> -->
+                          <input form="create_form" type="text" class="form-control" name="status" id="status" placeholder="status" value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.status %><% } else { %>0<% } %>" hidden>
+                          
+                          <!-- <div class="invalid-tooltip">Select input type</div>
+                      </div> -->
+                      <div class="row">
+                      <div class="form-group col-md-4">
+                        <label for="lastrun">last run</label>
+                        <input form="create_form" readonly type="text" class="form-control" name="lastrun" id="lastrun" placeholder="lastrun" value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.lastrun %><% } %>" >
+                        <div class="invalid-tooltip">
+                         Please fill the input
+                        </div>
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="lastend">last end</label>
+                        <input form="create_form" readonly type="text" class="form-control" name="lastend" id="lastend" placeholder="lastend" value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.lastend %><% } %>" >
+                        <div class="invalid-tooltip">
+                         Please fill the input
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                  
+                  
+                    <span class="badge bg-secondary">TASK CONF</span>                 
+                    <div class="row">
+                      <div class="col">
+                        <label for="file">Workflow</label>
+                        <input id="file" name="file" class="form-control" list="bpmfilelists" required value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.file %><% } %>">
+                        <datalist id="bpmfilelists">                            
+                        </datalist>
+                        <div class="invalid-tooltip">
+                         Please fill the input
+                        </div>
+                      </div>
+                    </div>
+                      
+                  
+                  
+                    <span class="badge bg-secondary">Entity</span> 
+                    <div class="row">
+                      <div class="col">
+                       
+                      
+                      <input id="entity" name="entity" class="form-control" list="entitieslists" required value="<% if (typeof postDetail != 'undefined') { %><%= postDetail.entity %><% } %>">
+                      <datalist id="entitieslists">                            
+                      </datalist>                      
+
+                      <div class="invalid-tooltip">
+                        Select Source files
+                      </div>
+                    </div>                      
+                      
+                    </div> 
+                    <div  class="row">
+                      <div id="divattribute" class="col-md-12 form-group">
+                      </div>
+                      
+                      
+                    </div>                    
+                    <a class="btn btn-lg btn-lg btn-outline-primary" href="/workflows" role="button">EXIT </a> <button type="submit" class="btn btn-lg btn-lg btn-outline-success">CHANGE</button>
+                  </form>
+                
+                                                
+            
+            
+              
+<%- include('partials/footer') %>
+<%- include('partials/rows_manager') %>
+
+<% if (typeof postDetail != 'undefined') {var row = JSON.stringify(postDetail)} else { var postDetail =""}%>
+
+<script>
+    var rows = <%- JSON.stringify(postDetail) %>;    
+</script>
+
+<script>
+  if (rows !== "" ) {
+    postDetail = rows;
+    var doimport = true;
+  }
+
+
+  $(document).ready(function () {
+    Enable_datalist_entities();
+    Enable_datalist_files();
+  });
+
+
+
+</script>

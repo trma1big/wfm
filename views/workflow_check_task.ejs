@@ -1,0 +1,106 @@
+<%- include('partials/header') %>    
+
+<a class="btn btn-lg btn-lg" href="/workflows" role="button">Back &raquo;</a>     
+                    
+
+<link rel="stylesheet" href="/bpmn-js/dist/assets/bpmn-js.css">
+<script src="/bpmn-js/dist/bpmn-navigated-viewer.development.js"></script>
+<style>
+  html, body, #canvas {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .diagram-note {
+    background-color: rgba(66, 180, 21, 0.7);
+    color: White;
+    border-radius: 5px;
+    font-family: Arial;
+    font-size: 12px;
+    padding: 5px;
+    min-height: 16px;
+    width: 50px;
+    text-align: center;
+  }
+
+  .needs-discussion:not(.djs-connection) .djs-visual > :nth-child(1) {
+    stroke: rgba(66, 180, 21, 0.7) !important; /* color elements as red */
+  }
+</style>
+
+<div id="canvas" class="mw-100" style="width: 1200px; height: 300px"></div>
+<form id="save_task" method="POST" action="/tasks/save_tasks_final" class="was-validated">   
+  <input type="text" hidden name="file" value="<%= filename %>">           
+  <div id="newRow"></div>
+  <div class="row">
+    <div class="col">
+        <div id="idupload" class="form-group">     
+          <a class="btn btn-lg btn-lg btn-outline-primary" href="/" role="button">EXIT </a> 
+          <button type="submit" class="btn btn-lg btn-lg btn-outline-success">SAVE</button>                   
+        </div>                    
+    </div>
+</div>
+</form>
+
+              
+<%- include('partials/footer') %>
+
+
+
+<script>
+     var filename =  <%- JSON.stringify(filename) %>;    
+</script>
+
+<script>
+  
+  if (filename !== "" ) {
+    postDetail = filename;
+    var doimport = true;
+  }
+  
+  var diagramUrl = postDetail;
+
+var bpmnViewer = new BpmnJS({
+  container: '#canvas'
+});
+
+
+async function openDiagram(bpmnXML) {
+  try {
+    await bpmnViewer.importXML(bpmnXML);
+    var canvas = bpmnViewer.get('canvas');
+    var overlays = bpmnViewer.get('overlays');
+    canvas.zoom('fit-viewport');
+    var elementRegistry = canvas._elementRegistry;
+    elementRegistry.forEach(function(elem, gfx) {            
+      if (elem.businessObject.$instanceOf('bpmn:Task')){   
+        elem.outgoing.forEach(function(annot, gfx) {                    
+          if (annot.businessObject.targetRef.$instanceOf('bpmn:TextAnnotation')){            
+            note = annot.businessObject.targetRef.text;
+          }
+        });
+        const val = elem.businessObject.name;
+        var html = '';
+            html += '<div id="inputFormRow">';
+            html += '<div class="input-group mb-3">';
+            html += '<input type="text" name="ids[]" class="form-control m-input" placeholder="" value="' + elem.businessObject.id +'" readonly>';
+            html += '<input type="text" name="jobs[]" class="form-control m-input" placeholder="" value="' + val +'" readonly>';
+            html += '<input type="text" name="jobs_desc[]" class="form-control m-input" placeholder="" value="' + note +'" readonly>';
+            html += '<div class="input-group-append">';
+            html += '</div>';
+            html += '</div>';
+
+            $('#newRow').append(html);
+         
+      }
+    });
+  } catch (err) {
+    console.error('could not import BPMN 2.0 diagram', err);
+    alert('could not import BPMN 2.0 diagram', err);
+  }
+}
+
+
+$.get(diagramUrl, openDiagram, 'text');
+</script>
