@@ -17,7 +17,7 @@ no databases needed, all data are saved on json files in order to be portable wi
  + update _.env_ data in order to customize your installation
  + execute _node app.js_
 
-# WEB INTERFACE
+# WEB UI
 by default the web interface respond on port 80 ( view .env PORT = 80 HOST = 0.0.0.0 ).
 go to http://localhost.
 the default username is _admin_ with password _password_ (changeIT as soon as possible).
