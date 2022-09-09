@@ -52,7 +52,7 @@ The application expose _APIs_ in order to:
     - METHOD : POST
     - AUTH : 'X-Access-Token' on header ( token get from login call)
     - DATA FORMAT : json
-    - DATA : wsname ( workflow name), taskname ( jobs returned by previous API ) and status ( new status value )
+    - DATA : "wsname" ( workflow name), "taskname" ( jobs returned by previous API )  "status" ( new status value )
 
 
 possible status value are:
