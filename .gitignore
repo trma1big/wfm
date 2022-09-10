@@ -108,6 +108,6 @@ certificates/
 db/*.json
 db/*.xml
 wf/*.bpmn
-log/*
+log/*.log
 *-xml.js
 
