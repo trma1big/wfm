@@ -8,6 +8,8 @@ saml.setSchemaValidator(validator);
 
 const fs = require('fs');
 
+
+
 const IdentityProvider = saml.IdentityProvider;
 
 var settings = {
