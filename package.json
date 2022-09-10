@@ -1,7 +1,7 @@
 {
-  "name": "ETL_MT",
+  "name": "WFM",
   "version": "1.0.0",
-  "description": "Node.js on Docker",
+  "description": "Node.js",
   "author": "First Last <mtrezzi@dxc.com>",
   "main": "app.js",
   "type": "commonjs",
