@@ -19,7 +19,7 @@ var nodeDate = require('date-and-time');
 
 
 exports.nodeDate = nodeDate;
-if (process.env.USE_SSL !== "0") {
+if (process.env.USE_SSL === "1") {
   var options = {
     key: fs.readFileSync(process.env.KEY),
     cert: fs.readFileSync(process.env.CERT),
@@ -54,8 +54,10 @@ router.post('/login', login);
 router.use('/logoff', logoff);
 router.use('/logon', logonform);
 // Route for SSO with saml2
-var sso = require('./sso');
-router.use('/sso', sso);
+if ( process.env.USE_SSO === "1") {
+  var sso = require('./sso');
+  router.use('/sso', sso);
+}
 
 var apiaccess = require('./api');
 var wfview = require('./workflows');
