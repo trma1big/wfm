@@ -12,8 +12,9 @@ no databases needed, all data are saved on json files in order to be portable wi
  + clone the repo 
  + _cd wfm_
  + _npm init_
- + rename all _db/.json.distribution_ to _db/.json_
- + rename ._env.distribution_ to _.env_
+ + copy all _db/wfm.json.distribution_ to _db/.json_ ( _cp db/wfm.json.distribution db/wfm.json_)
+ + copy all _db/wfm.json.distribution_ to _db/.json_ ( _cp db/user.json.distribution db/user.json_)
+ + copy ._env.distribution_ to _.env_ ( _cp .env.distribution .env_)
  + update _.env_ data in order to customize your installation
  + execute _node app.js_
 
