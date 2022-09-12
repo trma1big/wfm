@@ -9,13 +9,11 @@ no databases needed, all data are saved on json files in order to be portable wi
 
  # INSTALL
  + install node js ( https://nodejs.org/it/download/ )
- + clone the repo 
+ + clone the repo ( _git clone https://github.com/trma1big/wfm.git_ )
  + _cd wfm_
- + _npm init_
- + copy all _db/wfm.json.distribution_ to _db/.json_ ( _cp db/wfm.json.distribution db/wfm.json_)
- + copy all _db/wfm.json.distribution_ to _db/.json_ ( _cp db/user.json.distribution db/user.json_)
- + copy ._env.distribution_ to _.env_ ( _cp .env.distribution .env_)
- + update _.env_ data in order to customize your installation
+ + _npm install_
+ + _node install.js_
+ + update _.env_ data in order to customize your installation (don't remove _key_crypt_ and _iv_crypt_ just created by _install.js_)
  + execute _node app.js_
 
 # WEB UI
