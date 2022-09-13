@@ -2,7 +2,7 @@
 # wfm
 ## WorkFlow Monitor
 
-configure WF using standard BPMn diagram files - in this case a simple workflow that represent the process/activity (manual or using programs ) - 
+configure WF using standard BPMn diagram files - in this case a simple BPM workflow that represent a list of process/activity  - 
 typical use case are :
 * a workflow that contains all the backoffice process needed to "close" a day ( _example/example_4.bpmn )
 * a workflow that contains all the AM IT department process needed to give the start to the customers to work on an application ( _example/example_2.bpmn )
