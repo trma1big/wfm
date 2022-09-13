@@ -1,7 +1,6 @@
 import sys
 import requests
 from requests.exceptions import HTTPError
-url = 'http://localhost'
 import getopt
 
 
@@ -16,7 +15,7 @@ def usage():
         "Example : python start_all_task.py -s 1 -t WS-DAILY-BPO-MEDIOB -j FASE1\n"
     )
   
-def single_change_status(wf, job,status,verbose):
+def single_change_status(wf, job,status,verbose,url):
     if ( verbose ) : print ("starting  change to status : " + status+ " for workflow" + wf + " on job " + job + "\n")
     try:
         response = requests.post(url + '/login', data = {'username':'admin', 'password':'password','api' : 1 })
@@ -52,7 +51,7 @@ def single_change_status(wf, job,status,verbose):
 
 
 
-def full_change_status(status,verbose):
+def full_change_status(status,verbose,url):
     if ( verbose ) : print ("starting full change to status : " + status+ " for all workflows\n")
     try:
         response = requests.post(url + '/login', data = {'username':'admin', 'password':'password','api' : 1 })
@@ -113,7 +112,7 @@ def full_change_status(status,verbose):
 def main():
     
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hs:t:j:vf", ["help", "status=","task=","job="])
+        opts, args = getopt.getopt(sys.argv[1:], "hs:t:j:h:p:vf", ["help", "status=","task=","job=","host=","port="])
     except getopt.GetoptError:
         # stampa l'informazione di aiuto ed esce:
         usage()
@@ -137,12 +136,16 @@ def main():
             
         if o in ("-j", "--job"):
             job = a
-    
+        if o in ("-s", "--server"):
+            host = a
+        if o in ("-p", "--port"):
+            port = a
+    url = 'http://' + host + ":" + port
+
     if (action == "full" and status != ""):
-        full_change_status(status,verbose)
+        full_change_status(status,verbose,url)
     if (action == "single" and status != ""):
-        
-        single_change_status(wf,job, status,verbose)
+        single_change_status(wf,job, status,verbose,url)
 
 if __name__ == "__main__":
     main()
