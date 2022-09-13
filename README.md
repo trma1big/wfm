@@ -12,13 +12,7 @@ the status of each fases rappresented in bpmn diagram could be changed using the
 no databases needed!! all configuration are saved on json files in order to be portable without problems.
 
  # INSTALL
- + install node js ( https://nodejs.org/it/download/ )
- + clone the repo ( _git clone https://github.com/trma1big/wfm.git_ )
- + _cd wfm_
- + _npm install_
- + _node install.js_
- + update _.env_ data in order to customize your installation (don't remove _key_crypt_ and _iv_crypt_ just created by _install.js_)
- + execute _node app.js_
+ go to [wiki/Install](wiki/Install)
 
 # WEB UI
 by default the web interface respond on port 80 ( view .env PORT = 80 HOST = 0.0.0.0 ).
