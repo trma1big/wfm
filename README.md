@@ -12,20 +12,10 @@ the status of each fases rappresented in bpmn diagram could be changed using the
 no databases needed!! all configuration are saved on json files in order to be portable without problems.
 
  # INSTALL
- go to [wiki/Install](wiki/Install)
+ go to [INSTALL WIKI](https://github.com/trma1big/wfm/wiki/Install)
 
 # WEB UI
-by default the web interface respond on port 80 ( view .env PORT = 80 HOST = 0.0.0.0 ).
-go to http://localhost.
-the default username is _admin_ with password _password_ (changeIT as soon as possible).
-you will find in _example_ folder 3 bpmn diagram that you can use as starting point ( are the same usable in _BPMn editor_ function)
-
-view workflow status.
-![image](https://user-images.githubusercontent.com/44255116/189321073-8f1eaa5f-2b19-46a7-ad50-ce13b352474a.png)
-
-edit workflow from template.
-![image](https://user-images.githubusercontent.com/44255116/189326578-fd479602-0694-4dd3-a44d-9b842d8dd19a.png)
-
+go to [WEBUI WIKI](https://github.com/trma1big/wfm/wiki/WEBUI)
 
 # API
 The application expose _APIs_ in order to: 
