@@ -4,8 +4,8 @@
 
 configure WF using standard BPMn diagram files - in this case a simple BPM workflow that represent a list of process/activity  - 
 typical use case are :
-* a workflow that contains all the backoffice process needed to "close" a day ( _example/example_BPO.bpmn )
-* a workflow that contains all the AM IT department process needed to give the start to the customers to work on an application ( _example/example_IT.bpmn )
+* a workflow that contains all the backoffice process needed to "close" a day ( _example/example_BPO.bpmn_ )
+* a workflow that contains all the AM IT department process needed to give the start to the customers to work on an application ( _example/example_IT.bpmn_ )
 
 the status of each fases rappresented in bpmn diagram could be changed using the API or manually using the web interface.
 
