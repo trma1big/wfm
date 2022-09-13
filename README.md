@@ -1,11 +1,15 @@
+
 # wfm
-WorkFlow Monitor
+## WorkFlow Monitor
 
-configure using standard BPMn diagram files a simple workflow that rapresent the process/activity (manual or using programs ) needed to close an operational day.
-the status of each fases can be changed using the API or manually using the web interface.
+configure WF using standard BPMn diagram files - in this case a simple workflow that represent the process/activity (manual or using programs ) - 
+typical use case are :
+* a workflow that contains all the backoffice process needed to "close" a day ( _example/example_4.bpmn )
+* a workflow that contains all the AM IT department process needed to give the start to the customers to work on an application ( _example/example_2.bpmn )
 
-no databases needed, all data are saved on json files in order to be portable without problems.
+the status of each fases rappresented in bpmn diagram could be changed using the API or manually using the web interface.
 
+no databases needed!! all configuration are saved on json files in order to be portable without problems.
 
  # INSTALL
  + install node js ( https://nodejs.org/it/download/ )
