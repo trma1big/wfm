@@ -5,7 +5,7 @@ const express = require('express');
 var bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
 const app = express();
-const {login, refresh} = require('./authentication')
+const {login, refresh} = require('./routes/authentication')
 const cors = require('cors');
 const path = require('path');
 const logger = require('morgan');
@@ -39,7 +39,7 @@ app.use(sessions({
     resave: false
 }));
 
-const {verify,verifyifadmin,verifyAPI} = require('./middleware')
+const {verify,verifyifadmin,verifyAPI} = require('./routes/middleware')
 
 app.set('view engine', 'ejs');
 app.use(cors());
@@ -48,8 +48,8 @@ app.use(logger(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:htt
 }));
 
 
-var logonform = require('./logon');
-var logoff = require('./logoff');
+var logonform = require('./routes/logon');
+var logoff = require('./routes/logoff');
 router.post('/login', login);
 router.use('/logoff', logoff);
 router.use('/logon', logonform);
@@ -59,12 +59,12 @@ if ( process.env.USE_SSO === "1") {
   router.use('/sso', sso);
 }
 
-var apiaccess = require('./api');
-var wfview = require('./workflows');
-var userview = require('./users');
-var homepageview = require('./homepage');
-var tasksview = require('./tasks');
-var entityview = require('./entities');
+var apiaccess = require('./routes/api');
+var wfview = require('./routes/workflows');
+var userview = require('./routes/users');
+var homepageview = require('./routes/homepage');
+var tasksview = require('./routes/tasks');
+var entityview = require('./routes/entities');
 
 router.get('/download', verifyifadmin,function(req, res){
     const file = __dirname + '/db/wfm.json';
