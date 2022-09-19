@@ -14,10 +14,10 @@ const IdentityProvider = saml.IdentityProvider;
 
 var settings = {
 	privateKey: fs.readFileSync('certificates/encryptKey.pem'),
-	privateKeyPass: 'xchanging',
+	privateKeyPass: '',
 	metadata: fs.readFileSync('certificates/sp-metadata.xml'),
 	encPrivateKey: fs.readFileSync('certificates/encryptKey.pem'),
-	encPrivateKeyPass: 'xchanging',
+	encPrivateKeyPass: '',
 	requestSignatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha512',
 	authnRequestsSigned: true,
 	wantAssertionsSigned: true,
@@ -26,7 +26,7 @@ var settings = {
 	wantLogoutRequestSigned: true,
 	assertionConsumerService: [{
 		Binding: binding.post,
-		Location: 'http://ap-lnx-019-034.ar-ent.net:8080/sso/acs',
+		Location: 'http://localhost:8080/sso/acs',
 	}]
 	};
 var sp = saml.ServiceProvider(settings);
