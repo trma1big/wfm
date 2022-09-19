@@ -107,6 +107,17 @@ function getDateStringCustom(oDate) {
   }
   return sDate;
 }
+function write_stats(username, current,wsname,taskname,status) {
+  var json_stats = ""
+  const fs = require('fs');
+  fs.createWriteStream(process.env.CONF_FOLDER + '/wfm_stats.db', { overwrite: false }); 
+  fs.appendFile(process.env.CONF_FOLDER + '/wfm_stats.db', current + ";" + username + ";" + wsname + ";"+ taskname + ";" + status, (err) => {
+    if (err) {
+        throw err;
+    }
+  });  
+}
+
 
 function write_hist(item) {
   const fs = require('fs');
@@ -165,6 +176,7 @@ module.exports = {
   encrypt,
   decrypt,
   write_hist,
+  write_stats,
   read_conf,
   write_conf,
   remore_files_after_upload

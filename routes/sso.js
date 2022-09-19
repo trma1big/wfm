@@ -14,10 +14,10 @@ const IdentityProvider = saml.IdentityProvider;
 
 var settings = {
 	privateKey: fs.readFileSync('certificates/encryptKey.pem'),
-	privateKeyPass: 'xchanging',
+	privateKeyPass: 'xxxxxxx',
 	metadata: fs.readFileSync('certificates/sp-metadata.xml'),
 	encPrivateKey: fs.readFileSync('certificates/encryptKey.pem'),
-	encPrivateKeyPass: 'xchanging',
+	encPrivateKeyPass: 'xxxxxxx',
 	requestSignatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha512',
 	authnRequestsSigned: true,
 	wantAssertionsSigned: true,
@@ -26,7 +26,7 @@ var settings = {
 	wantLogoutRequestSigned: true,
 	assertionConsumerService: [{
 		Binding: binding.post,
-		Location: 'http://ap-lnx-019-034.ar-ent.net:8080/sso/acs',
+		Location: 'http://localhost:8080/sso/acs',
 	}]
 	};
 var sp = saml.ServiceProvider(settings);
@@ -52,7 +52,7 @@ router.post('/acs', (req, res) => {
         var user = parseResult.extract.attributes["urn:oid:2.5.4.42"];
         group_array = parseResult.extract.attributes["urn:oid:1.3.6.1.4.1.5923.1.5.1.1"];
 		if (typeof group_array !== "undefined") {
-        	if (group_array.includes("CN=ARTSO,OU=AR-Users-Group,OU=KD,OU=AR,DC=ar-ent,DC=net")) { isadmin = 1 } 
+        	if (group_array.includes("CN=*,OU=*,OU=*,OU=*,DC=*,DC=*")) { isadmin = 1 } 
 		}
 		let payload = {username: user}
 		let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
@@ -62,7 +62,7 @@ router.post('/acs', (req, res) => {
     	res.cookie("jwt", accessToken, {secure: false, httpOnly: true})
 		res.cookie("user", user + "(" + email + ")")
     	res.cookie("isadmin", isadmin);
-    	res.redirect("/jobs");
+    	res.redirect("/");
 		res.send();
 
     })
