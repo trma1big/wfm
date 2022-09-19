@@ -52,7 +52,7 @@ router.post('/acs', (req, res) => {
         var user = parseResult.extract.attributes["urn:oid:2.5.4.42"];
         group_array = parseResult.extract.attributes["urn:oid:1.3.6.1.4.1.5923.1.5.1.1"];
 		if (typeof group_array !== "undefined") {
-        	if (group_array.includes("CN=ARTSO,OU=AR-Users-Group,OU=KD,OU=AR,DC=ar-ent,DC=net")) { isadmin = 1 } 
+        	if (group_array.includes("CN=*,OU=*,OU=*,OU=*,DC=*,DC=*")) { isadmin = 1 } 
 		}
 		let payload = {username: user}
 		let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
