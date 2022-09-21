@@ -107,6 +107,7 @@ dist
 certificates/
 db/*.json
 db/*.xml
+db/*.db
 wf/*.bpmn
 log/*.log
 *-xml.js

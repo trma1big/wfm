@@ -108,6 +108,10 @@ router.post('/chg_task_status', function(req, res) {
       item_ = ' CHANGED STATUS ' + username + " " + req.body.wsname + ' ' + req.body.taskname + " "  +req.body.status + "\n";
       glob.write_hist(item_);
     }
+    if (process.env.STATISTICS === "1"){
+      glob.write_stats(username, current,req.body.wsname,req.body.taskname,req.body.status );
+      glob.read_stats("19/09/2022","19/09/2022","example_IT","REVIEW_BATCH_LOGS");
+    }
     glob.write_conf(username, rawdata );
     if (elab === 0) { res.send([{"ErrorCode" : 1, type : "Warning", ErrorMessage : "no recors found"}]); }
     else {

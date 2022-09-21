@@ -62,7 +62,7 @@ router.post('/acs', (req, res) => {
     	res.cookie("jwt", accessToken, {secure: false, httpOnly: true})
 		res.cookie("user", user + "(" + email + ")")
     	res.cookie("isadmin", isadmin);
-    	res.redirect("/jobs");
+    	res.redirect("/");
 		res.send();
 
     })

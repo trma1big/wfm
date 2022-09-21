@@ -99,6 +99,24 @@ router.get('/upload_task', verifyifeditor,function(req, res, next) {
   res.render('workflow_upload_task', { user: req.session.user,  isadmin: req.session.isadmin, exists: exists});
 });
 
+
+router.get('/history/:wsname/:taskname', verifyifeditor,async function(req, res, next) {
+  var moment = require('moment');
+
+  res.render('task_history', { moment: moment, user: req.session.user,  isadmin: req.session.isadmin, wsname: req.params.wsname, taskname: req.params.taskname});
+});
+
+router.get('/allhistory', verifyifeditor,async function(req, res, next) {
+  var moment = require('moment');
+  res.render('task_history', { moment: moment, user: req.session.user,  isadmin: req.session.isadmin});
+});
+
+router.get('/gethist/:wsname/:taskname/:start/:end', verifyifeditor,async function(req, res, next) {
+  rawdata = await glob.read_stats(req.params.start,req.params.end, req.params.wsname, req.params.taskname);
+  res.send(rawdata);  
+});
+
+
 router.post('/save_and_check_tasks', verifyifeditor, function(req, res) {
   filename = req.body.filepond;  
   len = filename.split("\\");
