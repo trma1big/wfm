@@ -14,10 +14,10 @@ const IdentityProvider = saml.IdentityProvider;
 
 var settings = {
 	privateKey: fs.readFileSync('certificates/encryptKey.pem'),
-	privateKeyPass: 'xxxxxxx',
+	privateKeyPass: '',
 	metadata: fs.readFileSync('certificates/sp-metadata.xml'),
 	encPrivateKey: fs.readFileSync('certificates/encryptKey.pem'),
-	encPrivateKeyPass: 'xxxxxxx',
+	encPrivateKeyPass: '',
 	requestSignatureAlgorithm: 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha512',
 	authnRequestsSigned: true,
 	wantAssertionsSigned: true,
