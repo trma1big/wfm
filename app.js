@@ -101,7 +101,7 @@ router.use('/entities', verifyifadmin, entityview)
 router.use('/tasks', verify, tasksview)
 router.use('/',  verify, homepageview);
 
-const nm_dependencies = ['filepond','filepond-plugin-file-rename','date-and-time','bpmn-js','bootstrap-icons','bootstrap','jquery','@popperjs','datatables.net-bs5','datatables.net']; 
+const nm_dependencies = ['filepond','filepond-plugin-file-rename','date-and-time','bpmn-js','bootstrap-icons','bootstrap','jquery','@popperjs','datatables.net-bs5','datatables.net','chart.js']; 
 nm_dependencies.forEach(dep => {
   app.use(`/${dep}`, express.static(path.resolve(`node_modules/${dep}`)));
 });

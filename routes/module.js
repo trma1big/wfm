@@ -107,17 +107,105 @@ function getDateStringCustom(oDate) {
   }
   return sDate;
 }
+
 function write_stats(username, current,wsname,taskname,status) {
   var json_stats = ""
   const fs = require('fs');
-  fs.createWriteStream(process.env.CONF_FOLDER + '/wfm_stats.db', { overwrite: false }); 
-  fs.appendFile(process.env.CONF_FOLDER + '/wfm_stats.db', current + ";" + username + ";" + wsname + ";"+ taskname + ";" + status, (err) => {
+  // fs.createWriteStream(process.env.CONF_FOLDER + '/wfm_stats.db', { overwrite: false }); 
+  fs.appendFile(process.env.CONF_FOLDER + '/wfm_stats.db', current + ";" + username + ";" + wsname + ";"+ taskname + ";" + status + "\n", (err) => {
     if (err) {
         throw err;
     }
   });  
 }
 
+function in_interval (curdate, status, start_date,end_date) {
+  var moment = require('moment');
+  var cd_ = moment(curdate, "DD/MM/YYYY"); // 1st argument - string, 2nd argument - format
+  var cd= cd_.toDate();
+  var sd_ = moment(start_date, "DD/MM/YYYY"); // 1st argument - string, 2nd argument - format
+  var sd= sd_.toDate();
+  var ed_ = moment(end_date, "DD/MM/YYYY"); // 1st argument - string, 2nd argument - format
+  var ed= ed_.toDate();
+  if (status === "1") {
+      if (( cd >= sd) && (cd <= ed)) { return true}
+  }
+  else {
+    return false
+  }
+}
+
+function getduration( d_start_date, d_end_date) {
+  var moment = require('moment');
+  var sd_ = moment(d_start_date, "DD/MM/YYYY hh:mm:ss"); // 1st argument - string, 2nd argument - format
+  // var sd= sd_.toDate();
+  var ed_ = moment(d_end_date, "DD/MM/YYYY hh:mm:ss"); // 1st argument - string, 2nd argument - format
+  // var ed= ed_.toDate();
+  return ed_.diff(sd_, 'minutes')
+}
+
+async function getendtask(e_start_date_,wsname_,taskname_){
+  const fs = require('fs');   
+  const readline = require('readline');
+  const fileStream_ = fs.createReadStream(process.env.CONF_FOLDER + '/wfm_stats.db');
+  const rl_ = readline.createInterface({
+    input: fileStream_,
+    crlfDelay: Infinity
+  });
+  var ret_date = ""
+  var moment = require('moment');
+  var sd__ = moment(e_start_date_, "DD/MM/YYYY hh:mm:ss"); // 1st argument - string, 2nd argument - format
+  var sd_= sd__.toDate();
+  for await (const line_ of rl_) {
+    var l_ = line_.split(";");    
+    var cur__ = moment(l_[0], "DD/MM/YYYY hh:mm:ss"); // 1st argument - string, 2nd argument - format
+    var cur_= cur__.toDate();
+    if ( cur_ >= sd_) {
+      
+      if (l_[4] !== "1") {
+        
+        if ((wsname_ === l_[2]) && (taskname_ === l_[3])) {     
+          
+          return l_[0]
+        }
+      }
+    }
+  }
+  return ""
+}
+
+
+
+async function read_stats(start_date,end_date,wsname,taskname) {  
+  
+  const fs = require('fs');   
+  const readline = require('readline');
+  const fileStream = fs.createReadStream(process.env.CONF_FOLDER + '/wfm_stats.db');
+
+  const rl = readline.createInterface({
+    input: fileStream,
+    crlfDelay: Infinity
+  });
+  var _j = []
+  for await (const line of rl) {
+    var l = line.split(";");
+    if (in_interval (l[0],l[4],start_date,end_date)) {
+      if ((wsname !== "") && (taskname !== "")) {
+        if (l[2] === wsname) { 
+          if (l[3] === taskname) { 
+            var et = await getendtask(l[0],wsname,taskname)            
+            var hh = getduration(l[0],et);
+            // console.log("start_date:" + l[0] + " end_date:" + et + " duration:" + hh);
+            var item = {"wsname" : wsname, "taskname": taskname, "start_date" : l[0], "end_date" : et, "duration": hh}
+            _j.push(item)
+            // console.log(l)
+          } 
+        } 
+      }
+    }
+  }
+  return JSON.stringify(_j);
+}
 
 function write_hist(item) {
   const fs = require('fs');
@@ -132,9 +220,9 @@ function write_hist(item) {
 
 function write_conf(user, rawdata) {
   if (rawdata !== "" ) {
-    var xml2js = require('xml2js');
+    // var xml2js = require('xml2js');
     const fs = require('fs'); 
-    var builder = new xml2js.Builder();
+    // var builder = new xml2js.Builder();
     
     if (!fs.existsSync(process.env.CONF_FOLDER)){
       fs.mkdirSync(process.env.CONF_FOLDER);
@@ -149,14 +237,14 @@ function write_conf(user, rawdata) {
       });      
     }
     
-    var xmlback = builder.buildObject(rawdata);
+    // var xmlback = builder.buildObject(rawdata);
     fs.writeFile(process.env.CONF_FOLDER + '/wfm.json', JSON.stringify(rawdata), (err) => {
       if (err) {
           throw err;
       }
     });
 
-    fs.writeFile(process.env.CONF_FOLDER + '/wfm.xml', xmlback, (err) => {if (err) {throw err;}});     
+    // fs.writeFile(process.env.CONF_FOLDER + '/wfm.xml', xmlback, (err) => {if (err) {throw err;}});     
   }
 };
 
@@ -179,5 +267,6 @@ module.exports = {
   write_stats,
   read_conf,
   write_conf,
-  remore_files_after_upload
+  remore_files_after_upload,
+  read_stats  
 }

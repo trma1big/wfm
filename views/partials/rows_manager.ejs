@@ -2,30 +2,9 @@
 
 
 
-function alert_visibility( id, logid, method  ) {  
- 
-      $('#senderdiv' + logid).prop('hidden', true);   
-      $('#subjectdiv' + logid).prop('hidden', true);   
-      $('#smtpdiv' + logid).prop('hidden', true);      
-      $('#portdiv' + logid).prop('hidden', true);      
-      $('#emaildiv' + logid).prop('hidden', true);  
-      $('#logoutputdiv' + logid).prop('hidden', true);
-      $('#sender' + logid).removeAttr('required');
-      $('#subject' + logid).removeAttr('required');
-      $('#smtp' + logid).removeAttr('required');
-      $('#port' + logid).removeAttr('required');
-      $('#email' + logid).removeAttr('required');
-      $('#logoutput' + logid).removeAttr('required');     
-}
-
-
-
-
-
-
-
 function Enable_datalist_entities()
 {
+
   $.ajax({
             url: '/api/v1/list/entities',
             type: 'get',
@@ -36,6 +15,7 @@ function Enable_datalist_entities()
                 var len = response.length;
 
                 $("#entitieslists").empty();
+                
                 for( var i = 0; i<len; i++){                    
                     var name = response[i].name;                                        
                     var description = response[i].description;
@@ -45,6 +25,56 @@ function Enable_datalist_entities()
             }
         });
 }
+
+function Enable_wf_list(wsname)
+{
+  $.ajax({
+        url: '/api/v1/list/tasks',
+        type: 'get',
+        data: '',
+        dataType: 'json',
+        success:function(response){
+            
+            var len = response.length;                
+            for( var i = 0; i<len; i++){         
+                var name = response[i].name; 
+                if (wsname !== name ) {                        
+                    $('#wsname').append($('<option>', {
+                        value: name,
+                        text: name
+                    }));
+                }                    
+            }
+        }
+    });
+}
+
+function Enable_taskname_list(wsname,taskname)
+{
+  $("#taskname").empty();
+  $.ajax({
+        url: '/api/v1/jobs/' + wsname,
+        type: 'get',
+        data: '',
+        dataType: 'json',
+        success:function(response){            
+            var len = response.length; 
+            $("#taskname").empty();     
+            $("#taskname").prop('disabled', false)          
+            for( var i = 0; i<len; i++){         
+                var name = response[i].jobs; 
+                // if (taskname !== name ) {   
+                                         
+                    $('#taskname').append($('<option>', {
+                        value: name,
+                        text: name
+                    }));
+                // }                    
+            }
+        }
+    });
+}
+
 
 function Enable_datalist_files()
 {

@@ -16,6 +16,7 @@
     "bootstrap": "^5.2.0",
     "bootstrap-icons": "^1.9.1",
     "bpmn-js": "^9.4.0",
+    "chart.js": "^3.9.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "datatables.net-bs5": "^1.12.1",
@@ -30,15 +31,13 @@
     "formidable": "^2.0.1",
     "https": "^1.0.0",
     "jquery": "^3.6.1",
-    "js2xmlparser": "^4.0.2",
     "json-web-token": "^3.2.0",
     "jsonwebtoken": "^8.5.1",
     "jsplumb": "^2.15.6",
     "jwt-decode": "^3.1.2",
+    "moment": "^2.29.4",
     "morgan": "^1.10.0",
     "request": "^2.88.2",
-    "samlify": "^2.8.3",
-    "uuid": "^8.3.2",
-    "xml2js": "^0.4.23"
+    "uuid": "^8.3.2"
   }
 }
