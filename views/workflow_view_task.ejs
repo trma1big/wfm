@@ -141,7 +141,7 @@ async function openDiagram(bpmnXML) {
 
 
         var html = '';
-            html += '<tr><td>' + val[0] +'</td><td>' + data[0].jobs_description +' </td><td>' + data[0].last_start+' </td><td>' + data[0].last_end+' </td><td>' + status + '</td><td>' + comment +'</td><td ' + styletd + '><a id="editrow' + name +"/" + val[0] + '" class=editrow role=button aria-disabled="true"><i class="bi bi-stack-overflow text-dark" title="Status"></i></a><a id="history' + name +"/" + val[0] + '" class=history role=button aria-disabled="true"><i class="bi bi-activity text-dark" title="history"></i></a></td></tr>';
+            html += '<tr><td>' + val[0] +'</td><td>' + data[0].jobs_description +' </td><td>' + data[0].last_start+' </td><td>' + data[0].last_end+' </td><td>' + status + '</td><td>' + comment +'</td><td ' + styletd + '><span class="badge rounded-pill bg-light text-dark"><a id="editrow' + name +"/" + val[0] + '" class=editrow role=button aria-disabled="true"><i class="bi bi-stack-overflow" title="Status"></i></a></span><span class="badge rounded-pill bg-light text-dark"><a id="history' + name +"/" + val[0] + '" class=history role=button aria-disabled="true"><i class="bi bi-activity text-dark" title="history"></i></a></span></td></tr>';
             $("#dtworkflows tbody").append(html);
             
             // $('#newRow').append(html);   
