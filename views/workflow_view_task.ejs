@@ -141,7 +141,7 @@ async function openDiagram(bpmnXML) {
 
 
         var html = '';
-            html += '<tr><td>' + val[0] +'</td><td>' + data[0].jobs_description +' </td><td>' + data[0].last_start+' </td><td>' + data[0].last_end+' </td><td>' + status + '</td><td>' + comment +'</td><td ' + styletd + '><a id="editrow' + name +"/" + val[0] + '" class=editrow role=button aria-disabled="true"><i class="bi bi-stack-overflow text-dark" title="Status"></i></a></td></tr>';
+            html += '<tr><td>' + val[0] +'</td><td>' + data[0].jobs_description +' </td><td>' + data[0].last_start+' </td><td>' + data[0].last_end+' </td><td>' + status + '</td><td>' + comment +'</td><td ' + styletd + '><a id="editrow' + name +"/" + val[0] + '" class=editrow role=button aria-disabled="true"><i class="bi bi-stack-overflow text-dark" title="Status"></i></a><a id="history' + name +"/" + val[0] + '" class=history role=button aria-disabled="true"><i class="bi bi-activity text-dark" title="history"></i></a></td></tr>';
             $("#dtworkflows tbody").append(html);
             
             // $('#newRow').append(html);   
@@ -167,6 +167,14 @@ $(document).on('click', '.editrow[id^=editrow]', function() {
   } else { alert("you are not authorized to change the status, contact the admin!")}
 });
 
+$(document).on('click', '.history[id^=history]', function() {    
+  if (isadmin >= 1 ) {
+    var id = this.id.replace("history", "");
+    event.preventDefault(); 
+    var url = "/tasks/history/" + id;
+    location.replace(url);
+  } else { alert("you are not authorized to change the status, contact the admin!")}
+});
 
 
 $.get(diagramUrl, openDiagram, 'text').done();
