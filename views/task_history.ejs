@@ -31,7 +31,17 @@
             <label for="startDate">To</label>
             <input id="endDate" class="form-control" type="date" value="<%= moment().format('YYYY-MM-DD') %>"/>
         </div>
-        <div class="col-md-4 form-group">
+        <div class="col">
+            <label for="taskname">Graph Type</label>
+            <select class="form-control" name="graph_type" id="graph_type">
+                    <option value="table" selected>table</option>
+                    <option value="line">line</option>
+                    <option value="bar">bar</option>
+                    <option value="radar">radar</option>
+                    <option value="polarArea">polarArea</option>
+            </select>                        
+        </div>
+        <!-- <div class="col-md-4 form-group">
             <div class="col-md-4 form-group">
                 <div class="form-check">                    
                     <input class="form-check-input" type="radio" name="graph_type" id="graph_type" value="table" checked>                            
@@ -54,7 +64,7 @@
                     <label class="form-check-label" for="invalidCheck"><label for="graph_type"><span class="badge bg-secondary">polarArea</span></label>  
                 </div>                
             </div>
-        </div>
+        </div> -->
         <!-- <div class="col"><div class="row">Line<input type="radio" id="line" name="graph_type" value="line" checked></div><div class="row">Radar<input type="radio" id="radar" name="graph_type" value="radar"></div></div> -->
         <div class="col"><button type="submit" class="btn btn-lg btn-lg btn-outline-success">FILTER</button></div>
      </div>               
@@ -105,8 +115,9 @@
         wsname = $("#wsname").val();
         if (wsname !== "none") {
             taskname = $("#taskname").val();
-            var myRadio = $("input[name=graph_type]");
-            var checkedValue = myRadio.filter(":checked").val();        
+            // var myRadio = $("input[name=graph_type]");
+            // var checkedValue = myRadio.filter(":checked").val(); 
+            var checkedValue = $("#graph_type").val();       
             if (checkedValue === "table") {
                 $('#divTable').show();
                 $('#divchart').hide();

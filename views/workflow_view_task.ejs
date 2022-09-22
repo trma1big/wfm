@@ -17,7 +17,7 @@
       <!-- <table id="dtworkflows" class="table compact table-hover table-sm table-bordered w-auto" >   -->
         <table id="dtworkflows" class="table table-striped table-bordered" style="width:100%">
         <thead class="table-dark">
-          <tr><th scope="col">Jobs</th><th scope="col">Description</th><th scope="col">last start</th><th scope="col">last end</th><th scope="col">Status</th><th scope="col">Comment</th><th></th></tr>
+          <tr><th scope="col">Jobs</th><th scope="col">Description</th><th scope="col">last start</th><th scope="col">last end</th><th scope="col">Comment</th><th scope="col">Status</th><th></th></tr>
         </thead>   
         <tbody>
         </tbody>
@@ -131,17 +131,21 @@ async function openDiagram(bpmnXML) {
             } else {
               styletd = 'style="background-color:#f3e6a2"';
               canvas.addMarker(data[0].jobs_id, 'notrunning');
-            }              
+            }        
+            selected0 = "selected";selected1="";selected2="";
           }
 
-          if (data[0].status === 1) {canvas.addMarker(data[0].jobs_id, 'running');status = "Running";styletd = 'style="background-color:#91d9bf"';}
-          if (data[0].status === 2) {canvas.addMarker(data[0].jobs_id, 'error');status = "Error";styletd = 'style="background-color:#eea796"';}
+          if (data[0].status === 1) {selected1 = "selected";selected0="";selected2="";canvas.addMarker(data[0].jobs_id, 'running');status = "Running";styletd = 'style="background-color:#91d9bf"';}
+          if (data[0].status === 2) {selected2 = "selected";selected1="";selected0="";canvas.addMarker(data[0].jobs_id, 'error');status = "Error";styletd = 'style="background-color:#eea796"';}
           
         // });
-
-
+        // id="status' + name +"/" + val[0] + '"
+        // onchange="change_status()"
+        select = '<td><select class="form-control" name="status" id="status' + name +"/" + val[0] + '" onchange="change_status()"><option value="0" '+ selected0 + '>Not Running</option><option value="1" '+ selected1 + '>Running</option><option value="2" '+ selected2 + '>Error</option></select></td>'
         var html = '';
-            html += '<tr><td>' + val[0] +'</td><td>' + data[0].jobs_description +' </td><td>' + data[0].last_start+' </td><td>' + data[0].last_end+' </td><td>' + status + '</td><td>' + comment +'</td><td ' + styletd + '><span class="badge rounded-pill bg-light text-dark"><a id="editrow' + name +"/" + val[0] + '" class=editrow role=button aria-disabled="true"><i class="bi bi-stack-overflow" title="Status"></i></a></span><span class="badge rounded-pill bg-light text-dark"><a id="history' + name +"/" + val[0] + '" class=history role=button aria-disabled="true"><i class="bi bi-activity text-dark" title="history"></i></a></span></td></tr>';
+            // html += '<tr><td>' + val[0] +'</td><td>' + data[0].jobs_description +' </td><td>' + data[0].last_start+' </td><td>' + data[0].last_end+' </td><td>' + status + '</td><td>' + comment +'</td>' + select + '<td ' + styletd + '><span class="badge rounded-pill bg-light text-dark"><a id="editrow' + name +"/" + val[0] + '" class=editrow role=button aria-disabled="true"><i class="bi bi-stack-overflow" title="Status"></i></a></span><span class="badge rounded-pill bg-light text-dark"><a id="history' + name +"/" + val[0] + '" class=history role=button aria-disabled="true"><i class="bi bi-activity text-dark" title="history"></i></a></span></td></tr>';
+            
+            html += '<tr><td>' + val[0] +'</td><td>' + data[0].jobs_description +' </td><td>' + data[0].last_start+' </td><td>' + data[0].last_end+' </td><td>' + comment +'</td>' + select + '<td ' + styletd + '><span class="badge rounded-pill bg-light text-dark"><a id="history' + name +"/" + val[0] + '" class=history role=button aria-disabled="true"><i class="bi bi-activity text-dark" title="history"></i></a></span></td></tr>';
             $("#dtworkflows tbody").append(html);
             
             // $('#newRow').append(html);   
@@ -166,6 +170,18 @@ $(document).on('click', '.editrow[id^=editrow]', function() {
     location.replace(url);
   } else { alert("you are not authorized to change the status, contact the admin!")}
 });
+
+function change_status() {
+  chvalue = document.getElementById(event.target.id).value;
+  var id = event.target.id.replace("status", "");
+  val = id.split("/");
+  data = {"wsname": val[0], "taskname": val[1], "status": chvalue}
+  var posting = $.post( "/api/v1/chg_task_status", data );
+    posting.done(function( data ) {
+      location.reload();;
+    });
+}
+
 
 $(document).on('click', '.history[id^=history]', function() {    
   if (isadmin >= 1 ) {
