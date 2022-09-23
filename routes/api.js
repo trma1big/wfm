@@ -85,6 +85,7 @@ router.post('/chg_task_status', function(req, res) {
     else {
       status_new = req.body.status;
     }
+    
     let nodeDate = require('date-and-time');
     let current = nodeDate.format(new Date(), 'DD/MM/YYYY HH:mm:ss');    
     rawdata.conf.workflows.workflow.forEach(function(item, index, object) {      
