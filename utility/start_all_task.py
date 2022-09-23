@@ -12,7 +12,7 @@ def usage():
         "-s status (0,1,2) -> 0 = not running, 1 = Running, 2 = Error\n" \
         "-h this usage\n" \
         "-v verbose\n\n" \
-        "Example : python start_all_task.py -s 1 -t WS-DAILY-BPO-MEDIOB -j FASE1\n"
+        "Example : python start_all_task.py -s 1 -t WS-1 -j FASE1\n"
     )
   
 def single_change_status(wf, job,status,verbose,url):
