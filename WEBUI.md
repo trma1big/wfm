@@ -34,6 +34,10 @@ from this view it's possible to change every single task status
 ### BPMn diagram Editor
 ![image](https://user-images.githubusercontent.com/44255116/189895268-edb4117d-0399-4d53-b082-cde96a4d6fbc.png)
 
+### Statistics
+table and graph about execution of task over time.
+![image](https://user-images.githubusercontent.com/44255116/191963013-0a006a25-a1b3-47f2-a9ca-e016b2f03e49.png)
+
 ### Default username
 the default username is _admin_ with password defined during the _node install.js_ process.<br>
 go to [users management interface](users) for documentation.<br>
