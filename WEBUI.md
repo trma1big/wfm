@@ -38,6 +38,11 @@ from this view it's possible to change every single task status
 table and graph about execution of task over time.
 ![image](https://user-images.githubusercontent.com/44255116/191963013-0a006a25-a1b3-47f2-a9ca-e016b2f03e49.png)
 
+### Exporting DATA
+all table present give to possibility to export the PDF version or copy in clipboard the data.
+![image](https://user-images.githubusercontent.com/44255116/191963520-e930364b-ce91-473a-bf1c-01e13b5fd7f5.png)
+
+
 ### Default username
 the default username is _admin_ with password defined during the _node install.js_ process.<br>
 go to [users management interface](users) for documentation.<br>
