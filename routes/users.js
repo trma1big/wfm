@@ -19,7 +19,6 @@ router.get('/list', function(req, res) {
   const fs = require('fs'); 
   let rawdata = fs.readFileSync(process.env.CONF_FOLDER + '/users.json');
   let users = JSON.parse(rawdata);
-  console.log(users)
   res.send(users);
 });
 
