@@ -41,6 +41,7 @@
     </div>
   </div>
 </div>
+<button class="btn btn-lg btn-lg btn-outline-success" onclick="download_pdf_from_image()">Download</button>
 <div id="canvas"class="mw-100" style="height: 300px"></div>
 
 </div>
@@ -51,8 +52,13 @@
 <script src="/datatables.net/js/jquery.dataTables.min.js" crossorigin="anonymous"></script> 
 <script src="/datatables.net-bs5/js/dataTables.bootstrap5.min.js" crossorigin="anonymous"></script> 
 <link rel="stylesheet" href="/datatables.net-bs5/css/dataTables.bootstrap5.min.css" crossorigin="anonymous">
-
-
+<script src="/datatables.net-buttons/js/dataTables.buttons.min.js" crossorigin="anonymous"></script>
+<script src="/datatables.net-buttons/js/buttons.html5.min.js" crossorigin="anonymous"></script>
+<script src="/datatables.net-buttons/js/buttons.print.min.js" crossorigin="anonymous"></script>
+<script src="/pdfmake/build/pdfmake.min.js" crossorigin="anonymous"></script>
+<script src="/pdfmake/build/vfs_fonts.js" crossorigin="anonymous"></script>
+<script src="/jspdf/dist/jspdf.umd.min.js"></script>
+<script src="/html2canvas/dist/html2canvas.min.js"></script>
 <script>
     var rows = <%- JSON.stringify(id) %>;       
 </script>
@@ -78,6 +84,8 @@ var bpmnViewer = new BpmnJS({
 $(document).ready(function () {
     // $('#dtworkflows').DataTable();
 });
+
+
 
 async function openDiagram(bpmnXML) {
   try {
@@ -154,7 +162,9 @@ async function openDiagram(bpmnXML) {
       // var elementToColor = elementRegistry.get('Activity_1k8523z');
       
     });
-    var table = $("#dtworkflows").DataTable({"pageLength": 5, "lengthChange": true});
+    var table = $("#dtworkflows").DataTable({"pageLength": 5, "lengthChange": true,     
+            dom: '<"top"Bi>rt<"bottom"flp><"clear">'   ,            
+            buttons: [{ extend: 'pdf', className: 'btn btn-outline-success', title: 'bpmn'}, { extend: 'copy', className: 'btn btn-outline-success'},]});
     // table.buttons().container().appendTo( '#dtworkflows_wrapper .col-md-7:eq(0)' );
   } catch (err) {
     console.error('could not import BPMN 2.0 diagram', err);
@@ -194,6 +204,19 @@ $(document).on('click', '.history[id^=history]', function() {
 
 
 $.get(diagramUrl, openDiagram, 'text').done();
+function download_pdf_from_image() {
+  html2canvas(document.querySelector("#canvas")).then(canvas => {
+            document.body.appendChild(canvas)
+            var canvasImage = canvas.toDataURL('image/png');
+            window.jsPDF = window.jspdf.jsPDF
+            let pdf = new jsPDF("landscape");
 
+            pdf.setFontSize(9);
+            pdf.addImage(canvasImage,'JPEG', 15, 15, 300, 150);                        
+            pdf.save('bpmn.pdf');
+            document.body.removeChild(canvas)
+        });
+        
+    }
 
 </script>

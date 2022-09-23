@@ -53,6 +53,11 @@
 
 <script src="/datatables.net/js/jquery.dataTables.min.js" crossorigin="anonymous"></script> 
 <script src="/datatables.net-bs5/js/dataTables.bootstrap5.min.js" crossorigin="anonymous"></script> 
+<script src="/datatables.net-buttons/js/dataTables.buttons.min.js" crossorigin="anonymous"></script>
+<script src="/datatables.net-buttons/js/buttons.html5.min.js" crossorigin="anonymous"></script>
+<script src="/datatables.net-buttons/js/buttons.print.min.js" crossorigin="anonymous"></script>
+<script src="/pdfmake/build/pdfmake.min.js" crossorigin="anonymous"></script>
+<script src="/pdfmake/build/vfs_fonts.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/datatables.net-bs5/css/dataTables.bootstrap5.min.css" crossorigin="anonymous">
 
 
@@ -95,6 +100,8 @@
                     return json;
                 }
             },   "scrollX": false,         stateSave: true,
+            dom: '<"top"Bi>rt<"bottom"flp><"clear">'   ,            
+            buttons: [{ extend: 'pdf', className: 'btn btn-outline-success', title: 'workflows'}, { extend: 'copy', className: 'btn btn-outline-success'},],
             "columns": [       
                 { "data": "id" },                       
                 { "data": "name" },

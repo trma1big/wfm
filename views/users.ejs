@@ -39,6 +39,11 @@
 <%- include('partials/footer') %>
 <script src="/datatables.net/js/jquery.dataTables.min.js" crossorigin="anonymous"></script> 
 <script src="/datatables.net-bs5/js/dataTables.bootstrap5.min.js" crossorigin="anonymous"></script> 
+<script src="/datatables.net-buttons/js/dataTables.buttons.min.js" crossorigin="anonymous"></script>
+<script src="/datatables.net-buttons/js/buttons.html5.min.js" crossorigin="anonymous"></script>
+<script src="/datatables.net-buttons/js/buttons.print.min.js" crossorigin="anonymous"></script>
+<script src="/pdfmake/build/pdfmake.min.js" crossorigin="anonymous"></script>
+<script src="/pdfmake/build/vfs_fonts.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/datatables.net-bs5/css/dataTables.bootstrap5.min.css" crossorigin="anonymous">
 <script>
     $(document).ready(function () {        
@@ -64,12 +69,15 @@
                     }
                     return json;
                 }
-            },            
+            },      
+            dom: '<"top"Bi>rt<"bottom"flp><"clear">'   ,            
+            buttons: [{ extend: 'pdf', className: 'btn btn-outline-success', title: 'users'}, { extend: 'copy', className: 'btn btn-outline-success'},],              
             "columns": [       
                 { "data": "id" }, 
                 { "data": "username" },                
                 { "data": "entity" },         
                 { "data": "admin" },
+                
                 { "render": function(data, type, row) {
                     if (disabled_editing !== 1) {                        
                         return '<span class="badge bg-danger"><a id="deleterow'+ row.id +'" class="delete" style="color: white;" role="button" ' + disabled_editing + '>Delete &raquo;</a></span>' +

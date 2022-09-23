@@ -1,7 +1,6 @@
 <%- include('partials/header') %>    
 <form id="filter_form" class="was-validated" validate>         
-    <!-- <input type="text" name="wsname" id="wsname" value="<% if (typeof wsname != 'undefined') { %><%= wsname %><% } %>" hidden> -->
-    <!-- <input type="text" name="taskname" id="taskname" value="<% if (typeof taskname != 'undefined') { %><%= taskname%><% } %>" hidden> -->
+   
     
      <div class="row">
         <div class="col">
@@ -39,61 +38,53 @@
                     <option value="bar">bar</option>
                     <option value="radar">radar</option>
                     <option value="polarArea">polarArea</option>
-            </select>                        
+            </select>
         </div>
-        <!-- <div class="col-md-4 form-group">
-            <div class="col-md-4 form-group">
-                <div class="form-check">                    
-                    <input class="form-check-input" type="radio" name="graph_type" id="graph_type" value="table" checked>                            
-                    <label class="form-check-label" for="invalidCheck"><label for="graph_type"><span class="badge bg-secondary">table</span></label>  
-                  </div>
-                <div class="form-check">                    
-                  <input class="form-check-input" type="radio" name="graph_type" id="graph_type" value="line">                            
-                  <label class="form-check-label" for="invalidCheck"><label for="graph_type"><span class="badge bg-secondary">line</span></label>  
-                </div>
-                <div class="form-check">                    
-                    <input class="form-check-input" type="radio" name="graph_type" id="graph_type" value="bar">                            
-                    <label class="form-check-label" for="invalidCheck"><label for="graph_type"><span class="badge bg-secondary">bar</span></label>  
-                </div>                
-                <div class="form-check">                          
-                  <input class="form-check-input" type="radio" name="graph_type" id="graph_type" value="radar">                            
-                  <label class="form-check-label" for="invalidCheck"><label for="graph_type"><span class="badge bg-secondary">radar</span></label>  
-                </div>
-                <div class="form-check">                          
-                    <input class="form-check-input" type="radio" name="graph_type" id="graph_type" value="polarArea">                            
-                    <label class="form-check-label" for="invalidCheck"><label for="graph_type"><span class="badge bg-secondary">polarArea</span></label>  
-                </div>                
-            </div>
-        </div> -->
-        <!-- <div class="col"><div class="row">Line<input type="radio" id="line" name="graph_type" value="line" checked></div><div class="row">Radar<input type="radio" id="radar" name="graph_type" value="radar"></div></div> -->
-        <div class="col"><button type="submit" class="btn btn-lg btn-lg btn-outline-success">FILTER</button></div>
+        <div class="col"><button type="submit" class="btn btn-lg btn-lg btn-outline-success">APPLY</button></div>
      </div>               
 </form>
+
 <div id='divTable'>
-<div class="table-responsive-xl" >
-    <table id="dthist" class="table table-striped table-bordered" style="width:100%">
-       <thead class="table-dark">
-            <tr>     
-            <th scope="col">workflow</th>  
-            <th scope="col">task</th>                                 
-            <th scope="col">Start date</th>
-            <th scope="col">end date</th>                                                 
-            <th scope="col">Duration ( Min )</th>
-            </tr>
-        </thead>               
-    </table>
-  </div>
+
+        <div class="table-responsive-xl" >
+            <table id="dthist" class="table table-striped table-bordered" style="width:100%">
+            <thead class="table-dark">
+                    <tr>     
+                    <th scope="col">workflow</th>
+                    <th scope="col">task</th>
+                    <th scope="col">Start date</th>
+                    <th scope="col">end date</th>
+                    <th scope="col">Duration ( Min )</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
 </div>
-  <div id="divchart">
-    <canvas id="myChart" width="1200" height="600" style="display: block; box-sizing: border-box; height: 600px; width: 1200px;"></canvas>
-    <!-- <canvas id="myChart"></canvas> -->
-  </div>
+
+
+<div id="divchart">
+    <canvas id="myChart" width="1200" height="600" style=" height: 600px; width: 1200px;"></canvas>
+    <button class="btn btn-lg btn-lg btn-outline-success" onclick="download_pdf_from_image()">Download</button>
+
+</div>
+ 
 <%- include('partials/footer') %>
 <%- include('partials/rows_manager') %>
 <script src="/datatables.net/js/jquery.dataTables.min.js" crossorigin="anonymous"></script> 
 <script src="/datatables.net-bs5/js/dataTables.bootstrap5.min.js" crossorigin="anonymous"></script> 
 <link rel="stylesheet" href="/datatables.net-bs5/css/dataTables.bootstrap5.min.css" crossorigin="anonymous">
+<script src="/datatables.net-buttons/js/dataTables.buttons.min.js" crossorigin="anonymous"></script>
+<script src="/datatables.net-buttons/js/buttons.html5.min.js" crossorigin="anonymous"></script>
+<script src="/datatables.net-buttons/js/buttons.print.min.js" crossorigin="anonymous"></script>
+<script src="/pdfmake/build/pdfmake.min.js" crossorigin="anonymous"></script>
+<script src="/pdfmake/build/vfs_fonts.js" crossorigin="anonymous"></script>
 <script src="/chart.js/dist/chart.js"></script>
+<script src="/jspdf/dist/jspdf.umd.min.js"></script>
+<script src="/html2canvas/dist/html2canvas.min.js"></script>
+
+
+
 <script>
     <% if (typeof wsname != 'undefined') { %>
         var wsname = <%- JSON.stringify(wsname) %>;
@@ -108,15 +99,14 @@
 
 
 <script>    
-//    document.getElementById("wsname").addEventListener("change", Enable_taskname_list($("#wsname").val(),taskname));
+
    document.getElementById("wsname").onchange = function(){Enable_taskname_list($("#wsname").val(),taskname)};
-// onchange="Enable_taskname_list(wsname,taskname)";
+
     $("#filter_form").submit(function(e) {
         wsname = $("#wsname").val();
         if (wsname !== "none") {
             taskname = $("#taskname").val();
-            // var myRadio = $("input[name=graph_type]");
-            // var checkedValue = myRadio.filter(":checked").val(); 
+
             var checkedValue = $("#graph_type").val();       
             if (checkedValue === "table") {
                 $('#divTable').show();
@@ -126,7 +116,7 @@
                 dt_master.ajax.reload();
             } else {            
                 $('#divTable').hide();
-                $('#divchart').show();  
+                $('#divchart').show();
                 $.get("/tasks/gethist/" + wsname + "/" + taskname + "/" + encodeURIComponent(formatDate(new Date($("#startDate").val()))) + "/" + encodeURIComponent(formatDate(new Date($("#endDate").val()))), function(data, status){
                     var js = JSON.parse(data);
                     const labels = [];
@@ -134,16 +124,26 @@
                     js.forEach(function(item, index, object) {              
                         labels.push(item.start_date)
                         values.push(item.duration)   
-                    });            
+                    });     
+                    const bgColor = {
+                        id: 'bgColor',
+                        beforeDraw: (chart, options) => {
+                            const {ctx, width, height } = chart;
+                            ctx.fillStyle = 'white';
+                            ctx.fillRect(0,0,width, height)
+                            ctx.restore();
+                        }
+                    }       
                     const chart_data = {
                         labels: labels,
                         datasets: [{
                         label: 'Execution miutes',
                         fill: true,
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        // borderColor: 'rgb(54, 162, 235)',
                         borderColor: 'rgb(54, 162, 235)',
                         pointBackgroundColor: 'rgb(54, 162, 235)',
-                        pointBorderColor: '#fff',
+                        pointBorderColor: '#000',
                         pointHoverBackgroundColor: '#fff',
                         pointHoverBorderColor: 'rgb(54, 162, 235)',
                         data: values,
@@ -153,7 +153,9 @@
                     const config = {
                         type: checkedValue,                    
                         data: chart_data,
-                        options: {responsive : false}
+                        options: {responsive : false,
+                        scales: { y: { beginAtZero : true}}},
+                        plugins: [bgColor]
                     };
                     let chartStatus = Chart.getChart("myChart");
                     if (chartStatus != undefined) {
@@ -184,9 +186,23 @@
         ].join('/');
     }
 
+    function download_pdf_from_image() {
+        const canvas = document.getElementById('myChart');
+        const canvasImage = canvas.toDataURL('image/jpeg',1.0);
+        window.jsPDF = window.jspdf.jsPDF
+        let pdf = new jsPDF("landscape");
+
+        pdf.setFontSize(20);
+        pdf.addImage(canvasImage,'JPEG', 15, 15, 280, 150);
+        
+        pdf.text(15,15,"Workflow: " + wsname + " Task: " + taskname)
+        pdf.save('statistics.pdf');
+        
+    }
 
     $(document).ready(function () {
-        Enable_wf_list(wsname);        
+        Enable_wf_list(wsname);
+        $('#divchart').hide();        
         dt_master = $('#dthist').DataTable(            
             {
             "ajax": {
@@ -200,7 +216,9 @@
                     }
                     return json;
                 }
-            },            
+            },     
+            dom: '<"top"Bi>rt<"bottom"flp><"clear">'   ,            
+            buttons: [{ extend: 'pdf', className: 'btn btn-outline-success', title: 'statistics'}, { extend: 'copy', className: 'btn btn-outline-success'}],
             "columns": [       
                 { "data": "wsname" }, 
                 { "data": "taskname" },                

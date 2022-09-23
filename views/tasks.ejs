@@ -52,6 +52,11 @@
 <%- include('partials/render_tables') %>
 <script src="/datatables.net/js/jquery.dataTables.min.js" crossorigin="anonymous"></script> 
 <script src="/datatables.net-bs5/js/dataTables.bootstrap5.min.js" crossorigin="anonymous"></script> 
+<script src="/datatables.net-buttons/js/dataTables.buttons.min.js" crossorigin="anonymous"></script>
+<script src="/datatables.net-buttons/js/buttons.html5.min.js" crossorigin="anonymous"></script>
+<script src="/datatables.net-buttons/js/buttons.print.min.js" crossorigin="anonymous"></script>
+<script src="/pdfmake/build/pdfmake.min.js" crossorigin="anonymous"></script>
+<script src="/pdfmake/build/vfs_fonts.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/datatables.net-bs5/css/dataTables.bootstrap5.min.css" crossorigin="anonymous">
 
 
@@ -87,6 +92,8 @@
                     return json;
                 }
             },   "scrollX": false,         stateSave: true,
+            dom: '<"top"Bi>rt<"bottom"flp><"clear">'   ,            
+            buttons: [{ extend: 'pdf', className: 'btn btn-outline-success', title: 'tasks'}, { extend: 'copy', className: 'btn btn-outline-success'},],
             "columns": [       
                 { "data": "id" },                       
                 { "data": "name" },
@@ -103,7 +110,7 @@
                         return  '<span class="badge bg-secondary"><a id="viewbpm'+ row.file +'" class="viewbpm" style="color: white;" role="button" aria-disabled="true"><i class="bi bi-ticket-detailed text-light" title="BPM"></i></a></span>' 
                     
                     
-                }}
+                }},
             ],
                 responsive: true,
                 "columnDefs": [
