@@ -162,8 +162,8 @@ async function openDiagram(bpmnXML) {
       // var elementToColor = elementRegistry.get('Activity_1k8523z');
       
     });
-    var table = $("#dtworkflows").DataTable({"pageLength": 5, "lengthChange": true,     
-            dom: '<"top"Bi>rt<"bottom"flp><"clear">'   ,            
+    var table = $("#dtworkflows").DataTable({"pageLength": 5, "lengthChange": true,
+            dom: '<"top"Bi>rt<"bottom"flp><"clear">',
             buttons: [{ extend: 'pdf', className: 'btn btn-outline-success', title: 'bpmn'}, { extend: 'copy', className: 'btn btn-outline-success'},]});
     // table.buttons().container().appendTo( '#dtworkflows_wrapper .col-md-7:eq(0)' );
   } catch (err) {
