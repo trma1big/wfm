@@ -9,10 +9,12 @@ def usage():
         "-f for full change the status on all workflows\nor\n" \
         "-w name of workflow to change the status\n+\n" \
         "-j name of job to change the status\n" \
-        "-s status (0,1,2) -> 0 = not running, 1 = Running, 2 = Error\n" \
+        "-a action (0,1,2) -> 0 = not running, 1 = Running, 2 = Error\n" \
         "-h this usage\n" \
         "-v verbose\n\n" \
-        "Example : python start_all_task.py -s 1 -t WS-1 -j FASE1\n"
+        "-p server port\n\n" \
+        "-s server name\n\n" \
+        "Example : python start_all_task.py -a 1 -f -p 80 -s localhost\n"
     )
   
 def single_change_status(wf, job,status,verbose,url):
@@ -112,7 +114,7 @@ def full_change_status(status,verbose,url):
 def main():
     
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hs:t:j:h:p:vf", ["help", "status=","task=","job=","host=","port="])
+        opts, args = getopt.getopt(sys.argv[1:], "ha:s:t:j:h:p:vf", ["help", "action=","task=","job=","host=","port="])
     except getopt.GetoptError:
         # stampa l'informazione di aiuto ed esce:
         usage()
@@ -128,7 +130,7 @@ def main():
         if o in ("-h", "--help"):
             usage()
             sys.exit()
-        if o in ("-s", "--status"):
+        if o in ("-a", "--action"):
             status = a
         if o in ("-t", "--task"):
             action = "single"

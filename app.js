@@ -9,6 +9,8 @@ const {login, refresh} = require('./routes/authentication')
 const cors = require('cors');
 const path = require('path');
 const logger = require('morgan');
+const moment = require('moment-timezone');
+const rfs = require("rotating-file-stream");
 const sessions = require('express-session');
 const jwt = require('jsonwebtoken')
 
@@ -43,8 +45,23 @@ const {verify,verifyifadmin,verifyAPI} = require('./routes/middleware')
 
 app.set('view engine', 'ejs');
 app.use(cors());
-app.use(logger(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" :user', {
-  stream: fs.createWriteStream(process.env.PATHLOG + '/access.log', {flags: 'a'})
+
+const rfsStream = rfs.createStream(process.env.PATHLOG + '/access.log', {
+  size: '2M', // rotate every 10 MegaBytes written
+  interval: '1d', // rotate daily
+  compress: 'gzip' // compress rotated files
+});
+
+logger.token('date', (req, res, tz) => {
+  return moment().tz(tz).format('DD-MM-YYYY HH:mm:ss');
+})
+logger.format('myformat', ':remote-addr - :remote-user [:date[Europe/Rome]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" :user :response-time ms');
+  
+// app.use(logger('myformat'))
+
+app.use(logger('myformat', 
+{
+  stream: rfsStream
 }));
 
 
