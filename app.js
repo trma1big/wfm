@@ -46,10 +46,12 @@ const {verify,verifyifadmin,verifyAPI} = require('./routes/middleware')
 app.set('view engine', 'ejs');
 app.use(cors());
 
-const rfsStream = rfs.createStream(process.env.PATHLOG + '/access.log', {
+const rfsStream = rfs.createStream(
+  'access.log', {
   size: '2M', // rotate every 10 MegaBytes written
   interval: '1d', // rotate daily
-  compress: 'gzip' // compress rotated files
+  compress: 'gzip', // compress rotated files
+  path : process.env.PATHLOG
 });
 
 logger.token('date', (req, res, tz) => {
