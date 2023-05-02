@@ -17,6 +17,8 @@ _iv_crypt_ = *******************************<br>
 ### JWT token
 you have/could change with an editor some value on .env in order to manage and secure the app.<br>
 
+
+
 ACCESS_TOKEN_SECRET=HERE THE TOKEN SECRET (_you have to change it with a sequence of chars_)<br>
 ACCESS_TOKEN_LIFE=30m (_token lifetime_)<br>
 REFRESH_TOKEN_SECRET=HERE THE TOKEN REFRESH SECRET (_you have to change it with a sequence of chars_)<br>
